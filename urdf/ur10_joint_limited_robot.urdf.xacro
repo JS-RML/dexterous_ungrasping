@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       name="ur10" >
+
+  <!-- common stuff -->
+  <xacro:include filename="$(find shallow_depth_insertion_v2)/urdf/common.gazebo.xacro" />
+
+  <!-- ur10 -->
+  <xacro:include filename="$(find shallow_depth_insertion_v2)/urdf/ur10.urdf.xacro" />
+
+  <!-- gripper -->
+  <xacro:include filename="$(find shallow_depth_insertion_v2)/urdf/robotiq_arg2f_140_model/robotiq_arg2f_140_model_macro.xacro" />
+  <xacro:robotiq_arg2f_140 prefix=""/>
+
+  <!-- ft sensor -->
+  <xacro:include filename="$(find robotiq_ft_sensor)/urdf/robotiq_ft300.urdf.xacro" />
+
+  <!-- arm -->
+  <xacro:ur10_robot prefix="" joint_limited="true"
+		 shoulder_pan_lower_limit="${-pi}" shoulder_pan_upper_limit="${pi}"
+		 shoulder_lift_lower_limit="${-pi}" shoulder_lift_upper_limit="${pi}"
+		 elbow_joint_lower_limit="${-pi}" elbow_joint_upper_limit="${pi}"
+		 wrist_1_lower_limit="${-pi}" wrist_1_upper_limit="${pi}"
+		 wrist_2_lower_limit="${-pi}" wrist_2_upper_limit="${pi}"
+		 wrist_3_lower_limit="${-pi}" wrist_3_upper_limit="${pi}"
+/>
+
+  <link name="world" />
+
+  <joint name="world_joint" type="fixed">
+    <parent link="world" />
+    <child link = "base_link" />
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+  </joint>
+
+  <xacro:robotiq_ft300 parent="ee_link" prefix="">
+		<origin xyz="-0.01 0.0 0.0" rpy="3.14159265359 -1.57079632679 0.0"/> 
+	</xacro:robotiq_ft300>
+
+  <joint name="gripper2sensor" type="fixed">
+    <parent link="robotiq_ft_frame_id" />
+    <child link = "robotiq_arg2f_base_link" />
+    <origin xyz="0.0 0.0 -0.0065" rpy="0.0 0.0 0.0" />
+  </joint>
+
+
+</robot>

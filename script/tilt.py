@@ -14,13 +14,14 @@ robot = moveit_commander.RobotCommander() #define the robot
 scene = moveit_commander.PlanningSceneInterface() #define the scene
 group = moveit_commander.MoveGroupCommander("manipulator") #define the planning group (from the moveit packet 'manipulator' planning group)
         
-def tilt(point, axis, magnitude, velocity):
-    '''Tilt trajectory of robot. 
+def tilt(point, axis, angle, velocity):
+    '''Tilt primitive motion of robot. 
 
     Parameters:
         point (list): 3-D coordinate of point in rotation axis
         axis (list): 3-D vector of rotation axis (right-hand rule)
-        magnitude (double): Magnitude of tilt angle
+        angle (double): angle of tilting 
+        velocity (double): robot velocity between 0 and 1
     Returns:
     
     '''
@@ -44,20 +45,20 @@ def tilt(point, axis, magnitude, velocity):
     v2 = np.cross(axis, v1)
 
     # Interpolate orientation poses via quaternion slerp
-    q = helper.axis_angle2quaternion(axis, magnitude)
+    q = helper.axis_angle2quaternion(axis, angle)
     ori_target =  tf.transformations.quaternion_multiply(q, ori_initial)    
-    ori_waypoints = helper.slerp(ori_initial, ori_target, np.arange(1.0/magnitude , 1.1, 1.0/magnitude)) 
-    
+    ori_waypoints = helper.slerp(ori_initial, ori_target, np.arange(1.0/angle , 1.0+1.0/angle, 1.0/angle)) 
+
     waypoints = []
-    for t in range(1, magnitude+1):
+    for t in range(1, angle+1):
         circle = np.add(center, radius*(math.cos(math.radians(t)))*v1 + radius*(math.sin(math.radians(t)))*v2)
         pose_target.position.x = circle[0]
         pose_target.position.y = circle[1]
         pose_target.position.z = circle[2]
-        pose_target.orientation.x = ori_waypoints[t][0]
-        pose_target.orientation.y = ori_waypoints[t][1]
-        pose_target.orientation.z = ori_waypoints[t][2]
-        pose_target.orientation.w = ori_waypoints[t][3]
+        pose_target.orientation.x = ori_waypoints[t-1][0]
+        pose_target.orientation.y = ori_waypoints[t-1][1]
+        pose_target.orientation.z = ori_waypoints[t-1][2]
+        pose_target.orientation.w = ori_waypoints[t-1][3]
         waypoints.append(copy.deepcopy(pose_target))
     (plan, fraction) = group.compute_cartesian_path(waypoints, 0.01, 0) # waypoints, resolution=1cm, jump_threshold)
     retimed_plan = group.retime_trajectory(robot.get_current_state(), plan, velocity) # Retime trajectory with scaled velocity

@@ -72,40 +72,38 @@ gPO: Actual position of the Gripper obtained via the encoders, value between 0x0
 gCU: The current is read instantaneously from the motor drive, value between 0x00 and 0xFF, approximate current equivalent is 10 * value read in mA.
 '''
 
-import sys
-import rospy 
-import roslib; roslib.load_manifest('robotiq_c_model_control')
-from robotiq_c_model_control.msg import _CModel_robot_output as outputMsg
-from robotiq_c_model_control.msg import _CModel_robot_input  as inputMsg
+import roslib; roslib.load_manifest('robotiq_2f_gripper_control')
+import rospy
+from robotiq_2f_gripper_control.msg import _Robotiq2FGripper_robot_output  as outputMsg
+from robotiq_2f_gripper_control.msg import _Robotiq2FGripper_robot_input  as inputMsg
 
-rospy.init_node('pjg', anonymous=True)  
-pub = rospy.Publisher('CModelRobotOutput', outputMsg.CModel_robot_output)
-
-def activate():
-    command = outputMsg.CModel_robot_output()
+def activate(pub):
+    command = outputMsg.Robotiq2FGripper_robot_output();
     command.rACT = 1
-    pub.publish(command)
-    rospy.sleep(0.5)
     command.rGTO = 1
-    command.rPr  = 255
-    command.rSP  = 50
-    command.rFR  = 150			
+    command.rSP  = 255
+    command.rFR  = 150		
     pub.publish(command)
-    rospy.sleep(0.5)
-  
-def reset():
-    command = outputMsg.CModel_robot_output()
+    rospy.sleep(0.1)
+    print command
+
+
+
+def reset(pub):
+    command = outputMsg.Robotiq2FGripper_robot_output();
     command.rACT = 0
     pub.publish(command)
     rospy.sleep(0.5)
+    print command
 
-def set_position(position):   
-    command = outputMsg.CModel_robot_output()
+def set_position(position, command, pub):   
+    command = outputMsg.Robotiq2FGripper_robot_output();
     command.rACT = 1
     command.rGTO = 1
     command.rSP  = 50
     command.rFR  = 150						
     command.rPR = position
+    print command
     pub.publish(command)
     rospy.sleep(0.5)
 
@@ -114,6 +112,13 @@ def set_position(position):
 # TODO: def automatic_release
 
 if __name__ == '__main__':
-    try:
-        print "pjg.py"
-    except rospy.ROSInterruptException: pass
+    rospy.init_node('pjg_controller')  
+
+    pub = rospy.Publisher('Robotiq2FGripperRobotOutput', outputMsg.Robotiq2FGripper_robot_output, queue_size=10)
+
+    command = outputMsg.Robotiq2FGripper_robot_output();
+
+    print "pjg.py"
+    set_position(100, command, pub)
+    print "DONE"
+    rospy.spin()

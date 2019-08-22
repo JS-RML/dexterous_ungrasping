@@ -1,0 +1,17 @@
+# Gripper parameters
+tcp2fingertip: 0.2765 # distance from tcp to gripper fingertip
+opening_per_count: 0.00065 # gripper stroke opening per rPr count
+finger_thickness: 0.005 
+max_opening: 0.1523 # max stroke of gripper excluding finger thickness
+
+# Object dimension
+object_thickness: 0.005 # object thickness in meters
+object_length: 0.1 # object length in meters
+
+# Initial configuration
+theta_0: 30.0
+delta_0: 0.03 # distance from fingertip to object tip within gripper
+
+# Target configuration
+psi_regrasp: 70.0
+theta_tilt: 20.0

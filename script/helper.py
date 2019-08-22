@@ -44,3 +44,21 @@ def axis_angle2quaternion(axis, angle):
     qz = axis[2] * s
     qw = math.cos(math.radians(angle)/2)
     return [qx, qy, qz, qw]
+
+def quaternion2axis_angle(q):
+    if q[3] > 1:
+        print "ERROR: Not unit quaternion!"
+        return None
+    angle = 2*math.acos(q[3])
+    s = math.sqrt(1-q[3]*q[3])
+    if s<0.001:
+        x = q[0]
+        y = q[1]
+        z = q[2]
+    else:
+        x = q[0]/s
+        y = q[1]/s
+        z = q[2]/s
+    return [x, y, z, angle]
+        
+
