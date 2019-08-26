@@ -11,11 +11,15 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  message_generation
+  cv_bridge
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
+find_package(OpenCV 3.3.1 EXACT REQUIRED)
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -54,11 +58,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+ add_service_files(
+   FILES
+   getCharucoPose.srv
+ )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -68,10 +71,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -103,6 +106,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
+  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 #  INCLUDE_DIRS include
 #  LIBRARIES shallow_depth_insertion_v2
 #  CATKIN_DEPENDS roscpp rospy std_msgs
@@ -118,6 +122,8 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+  ${Eigen_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -197,3 +203,12 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+
+add_executable(getCharucoPose_server src/getCharucoPose_server.cpp)
+target_link_libraries(getCharucoPose_server ${catkin_LIBRARIES} ${OpenCV_LIBS} Eigen3::Eigen)
+add_dependencies(getCharucoPose_server shallow_depth_insertion_v2_gencpp)
+
+add_executable(CharucoPose_publisher src/CharucoPose_publisher.cpp)
+target_link_libraries(CharucoPose_publisher ${catkin_LIBRARIES} ${OpenCV_LIBS} Eigen3::Eigen)
+add_dependencies(CharucoPose_publisher shallow_depth_insertion_v2_gencpp)

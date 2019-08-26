@@ -1,0 +1,13 @@
+%YAML:1.0
+
+#TOTE CHARUCO
+squaresX: 10
+squaresY: 3
+squareLength: 0.031
+markerLength: 0.023
+
+#Calibration board charuco
+#squaresX: 7
+#squaresY: 5
+#squareLength: 0.050
+#markerLength: 0.0375

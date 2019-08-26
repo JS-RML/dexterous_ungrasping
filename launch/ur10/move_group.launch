@@ -1,7 +1,7 @@
 <launch>
   <arg name="limited" default="false"/>
 
-  <include file="$(find ur10_moveit_config)/launch/planning_context.launch">
+  <include file="$(find shallow_depth_insertion_v2)/launch/ur10/planning_context.launch">
     <arg name="limited" value="$(arg limited)" />
     <arg name="load_robot_description" value="true" />
   </include>

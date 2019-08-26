@@ -10,11 +10,22 @@ import helper
 import motion_primitives
 import tilt
 import yaml
+import actionlib
+
+from robotiq_2f_gripper_msgs.msg import CommandRobotiqGripperFeedback, CommandRobotiqGripperResult, CommandRobotiqGripperAction, CommandRobotiqGripperGoal
+from robotiq_2f_gripper_control.robotiq_2f_gripper_driver import Robotiq2FingerGripperDriver as Robotiq
+
+rospy.init_node('regrasp', anonymous=True)  
+action_name = rospy.get_param('~action_name', 'command_robotiq_action')
+robotiq_client = actionlib.SimpleActionClient(action_name, CommandRobotiqGripperAction)
+#robotiq_client.wait_for_server()
 
 moveit_commander.roscpp_initialize(sys.argv)
 robot = moveit_commander.RobotCommander() 
 scene = moveit_commander.PlanningSceneInterface() 
 group = moveit_commander.MoveGroupCommander("manipulator") 
+
+
 
 def regrasp(axis, angle, velocity):
     with open("/home/john/catkin_ws/src/shallow_depth_insertion_v2/config/sdi_config.yaml", 'r') as stream:
@@ -76,6 +87,7 @@ def regrasp(axis, angle, velocity):
     retimed_plan = group.retime_trajectory(robot.get_current_state(), plan, velocity) 
     group.execute(retimed_plan, wait=False)
 
+    
     opening_at_zero = config['max_opening']-2*config['finger_thickness']
     psi = 0
     while psi < angle:
@@ -90,13 +102,11 @@ def regrasp(axis, angle, velocity):
         d = config['object_thickness'] * math.sin(math.radians(psi))
         opposite = a - d
         width = b + c
-        gripper_position = int((opening_at_zero - width)/config['opening_per_count'])
-        #gposition(pub, command, position) # TODO: pjg module 
-        print gripper_position
+        pos = int((opening_at_zero - width)/config['opening_per_count'])
+        Robotiq.goto(robotiq_client, pos=pos, speed=config['gripper_speed'], force=config['gripper_force'], block=False) 
         
 if __name__ == '__main__':
     try:
-        rospy.init_node('tilt', anonymous=True)  
         
         group.set_max_velocity_scaling_factor(1.0)
         motion_primitives.set_joint([0, -90, 90, 90, 90, 0])  

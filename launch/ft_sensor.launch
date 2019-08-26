@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<launch>
-    <node pkg="robotiq_force_torque_sensor" type="rq_sensor" name="rq_sensor" output="screen"/>
-    <!--node pkg="robotiq_c_model_control" type="CModelRtuNode.py" name="CModelRtuNode" args="/dev/ttyUSB0"/-->
-    <node pkg="robotiq_c_model_control" type="CModelSimpleController.py" name="CModelSimpleController" output="screen"/>
-    <!--node pkg="robotiq_c_model_control" type="CModelStatusListener.py" name="CModelStatusListener" output="screen"/-->
-</launch>
-
