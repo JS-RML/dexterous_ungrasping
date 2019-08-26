@@ -1,0 +1,12 @@
+@ARTICLE{8598749, 
+author={C. H. {Kim} and J. {Seo}}, 
+journal={IEEE Robotics and Automation Letters}, 
+title={Shallow-Depth Insertion: Peg in Shallow Hole Through Robotic In-Hand Manipulation}, 
+year={2019}, 
+volume={4}, 
+number={2}, 
+pages={383-390}, 
+keywords={dexterous manipulators;grippers;stability;cell phone battery insertion;dexterous manipulation actions;insertion operation;insertion process;shallow depth;Robotic In-Hand Manipulation;shallow hole;shallow-depth insertion;industrial robot arm;manipulation primitives;battery insertion task;Grippers;Robot kinematics;Task analysis;Batteries;Friction;Robotic assembly;Dexterous Manipulation;Grasping;Assembly;Grippers and Other End-Effectors}, 
+doi={10.1109/LRA.2018.2890449}, 
+ISSN={2377-3766}, 
+month={April},}
