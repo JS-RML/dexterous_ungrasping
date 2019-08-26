@@ -21,7 +21,8 @@ This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel 
 ## 2. Prerequisites
 
 ### 2.1 Hardware
-- [**Universal Robot UR10**](https://www.universal-robots.com/products/ur10-robot/) Industrial Robot Arm
+- [**Universal Robot UR10**](https://www.universal-robots.com/products/ur10-robot/) Industrial Robot Arm 
+
 - [**Robotiq 2F-140**](https://robotiq.com/products/2f85-140-adaptive-robot-gripper) Adaptive Parallel Jaw Gripper
 - [**Robotiq FT300**](https://robotiq.com/products/ft-300-force-torque-sensor) Force Torque Sensor
 - **Optional**: Webcam
@@ -66,9 +67,7 @@ The three primitive operations navigate the configuration space as follows:
 ***γ*** is fixed initially and remains fixed throughout the SDI process. 
 
 <p align = "center">
-<img src="files/tilt.jpg" width="250"> 
-<img src="files/regrasp.jpg" width="250"> 
-<img src="files/tuck.jpg" width="250">
+<img src="files/tilt.jpg" width="250">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="files/regrasp.jpg" width="250">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="files/tuck.jpg" width="250">
 </p>
 
 ## 6. Maintenance 
