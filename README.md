@@ -47,9 +47,28 @@ catkin_make
 ```
 
 ## 4. Run Shallow-Depth Insertion
- 
+### 4.1 Run in Simulation
+SDI can be visualized in simulation through Gazebo and RVIZ. The robot arm motion is simulated but the object-robot contact interaction is currently not availble. The gripper visualization is also under development. 
+To visualize the robot arm motion:
+```
+roslaunch shallow_depth_insertion_v2 ur10_robot.launch simulation:=true
+TODO: roslaunch gripper
+rosrun shallow_depth_insertion_v2 SDI_main.py
+```
+
+### 4.2 Run with Real Robot
+If you are able to meet the basic hardware requirements (robot arm and gripper), you can execute SDI with the real robot:
+```
+roslaunch shallow_depth_insertion_v2 ur10_robot.launch simulation:=false
+TODO: roslaunch gripper
+rosrun shallow_depth_insertion_v2 SDI_main.py
+```
+
+### 4.3 Changing execution parameters
+TODO: Instructions on changing config file parameters. 
+
 ## 5. Background
-SDI is composed of three primitive operations: tilt, regrasp, and tuck. The three manipulation primitives are utilized to navigate the configuration space of the object-gripper-hole system, which is parameterized as follows:
+SDI is composed of three primitive operations: **tilt**, **regrasp**, and **tuck**. The three manipulation primitives are utilized to navigate the configuration space of the object-gripper-hole system, which is parameterized as follows:
 - ***θ*** : Angle formed between the object and the hole surface
 -  ***ψ*** : Angle formed between the object and the gripper upper finger
 - ***γ*** : Ratio of the object enclosed by the gripper over the object length
