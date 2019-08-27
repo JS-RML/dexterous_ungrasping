@@ -1,6 +1,6 @@
 <launch>
   <arg name="sim" default="false" />
-  <arg name="limited" default="false"/>
+  <!--arg name="limited" default="false"/-->
   <arg name="debug" default="false" />
     
   <!-- Remap follow_joint_trajectory -->
@@ -8,7 +8,7 @@
   
   <!-- Launch moveit -->
   <include file="$(find shallow_depth_insertion_v2)/launch/ur10/move_group.launch">
-    <arg name="limited" default="$(arg limited)"/>
+    <!--arg name="limited" default="$(arg limited)"/-->
     <arg name="debug" default="$(arg debug)" />
   </include>
 </launch>

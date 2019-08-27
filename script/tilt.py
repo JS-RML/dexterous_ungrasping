@@ -32,7 +32,7 @@ def tilt(point, axis, angle, velocity):
     pose_target = group.get_current_pose().pose 
     pos_initial = [pose_target.position.x, pose_target.position.y, pose_target.position.z]
     ori_initial = [pose_target.orientation.x, pose_target.orientation.y, pose_target.orientation.z, pose_target.orientation.w]
-
+    
     # Tilt center point. Closest point from tcp to axis line    
     center = np.add(point, np.dot(np.subtract(pos_initial, point), axis)*axis)
     
@@ -69,7 +69,7 @@ if __name__ == '__main__':
         rospy.init_node('tilt', anonymous=True) #initialize the node 
         
         group.set_max_velocity_scaling_factor(1.0)
-        motion_primitives.set_joint([0, -90, 90, 0, 90, 0])  
+        motion_primitives.set_joint([0, -90, 90, 90, 90, 0])  
         p = group.get_current_pose().pose 
-        tilt([p.position.x+0.1,p.position.x,p.position.x], [0,1,0], 180, 0.5)
+        tilt([p.position.x,p.position.y,p.position.z], [0,-1,0], 90, 0.5)
     except rospy.ROSInterruptException: pass

@@ -1,28 +1,28 @@
 <!-- Launch file for Segway platform startup -->
 <launch>
     <arg name="sim" default="false"/>
-    <arg name="comport" default="/dev/ttyUSB1" unless="$(arg sim)"/> 
+    <arg name="comport" default="/dev/ttyUSB0" unless="$(arg sim)"/> 
     <arg name="baud" default="115200" unless="$(arg sim)"/> 
 
     <!-- Launch action server for gripper -->
-    <include file="$(find shallow_depth_insertion_v2)/launch/robotiq_action_server.launch">
+    <include file="$(find robotiq_2f_gripper_control)/launch/robotiq_action_server.launch">
         <arg name="comport" value="$(arg comport)" unless="$(arg sim)"/>
         <arg name="baud" value="$(arg baud)" unless="$(arg sim)"/>
         <arg name="stroke" value="0.140"/>
-        <arg name="joint_name" value="finger_joint"/>
+        <arg name="joint_name" value="gripper_finger_joint"/>
         <arg name="verbose" value="true"/>
         <arg name="sim" value="$(arg sim)"/>
     </include>
 
     <!-- Launch action client example  -->
-    <!--node pkg="shallow_depth_insertion_v2" type="pjg.py" 
+    <!--node pkg="robotiq_2f_gripper_control" type="robotiq_2f_action_client_example.py" 
         name="robotiq_140_client" output="screen">
         <param name="action_name" value="command_robotiq_action" />
     </node-->
 
-    <!--param name="robot_description" command="$(find xacro)/xacro $(find robotiq_2f_140_gripper_visualization)/urdf/robotiq_arg2f_140_model.xacro" />  
+    <!--param name="robot_description" command="$(find xacro)/xacro $(find robotiq_2f_140_gripper_visualization)/urdf/robotiq_arg2f_140_model.xacro" /-->  
 
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
+    <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
         <param name="robot_description" value="robot_description"/>
         <param name="publish_frequency" type="double" value="100.0" />
     </node-->

@@ -1,10 +1,13 @@
+# Robot parameters 
+tcp_speed: 0.1
+
 # Gripper parameters
 tcp2fingertip: 0.2765 # distance from tcp to gripper fingertip
 opening_per_count: 0.00065 # gripper stroke opening per rPr count
 finger_thickness: 0.005 
 max_opening: 0.1523 # max stroke of gripper excluding finger thickness
-gripper_speed: 200
-gripper_force: 10
+gripper_speed: 0.1 # value between 0.013 and 0.100
+gripper_force: 10 # value between 0 and 100
 
 # Object dimension
 object_thickness: 0.005 # object thickness in meters
@@ -12,8 +15,12 @@ object_length: 0.1 # object length in meters
 
 # Initial configuration
 theta_0: 30.0
-delta_0: 0.03 # distance from fingertip to object tip within gripper
+delta_0: 0.05 # distance from fingertip to object tip within gripper
 
-# Target configuration
+# Intermediate configuration
 psi_regrasp: 70.0
 theta_tilt: 20.0
+
+# Action axis
+axis: [0, -1, 0]
+
