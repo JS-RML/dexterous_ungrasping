@@ -2,7 +2,7 @@
 #include <opencv2/aruco.hpp>
 #include <Eigen/Dense>
 #include <opencv2/core/eigen.hpp>
-#include "shallow_depth_insertion_v2/getCharucoPose.h"
+#include "shallow_depth_insertion/getCharucoPose.h"
 #include "ros/ros.h"
 #include <opencv2/aruco/charuco.hpp>
 #include <vector>
@@ -85,11 +85,11 @@ static bool readCharucoParameters(std::string filename, int &squaresX, int &squa
 }
 
 // Service callback function: detect charuco board and return pose  
-bool getCharucoPose(shallow_depth_insertion_v2::getCharucoPose::Request &req, shallow_depth_insertion_v2::getCharucoPose::Response &res)
+bool getCharucoPose(shallow_depth_insertion::getCharucoPose::Request &req, shallow_depth_insertion::getCharucoPose::Response &res)
 {
   int squaresX, squaresY;
   float squareLength, markerLength;
-  readCharucoParameters("src/shallow_depth_insertion_v2/config/charuco_param.yaml", squaresX, squaresY, squareLength, markerLength);
+  readCharucoParameters("src/shallow_depth_insertion/config/charuco_param.yaml", squaresX, squaresY, squareLength, markerLength);
     
   int dictionaryId = 0;
   bool showRejected = 0;
@@ -104,7 +104,7 @@ bool getCharucoPose(shallow_depth_insertion_v2::getCharucoPose::Request &req, sh
 
   // Read detector parameters from config/yaml
   cv::Ptr<cv::aruco::DetectorParameters> detectorParams = cv::aruco::DetectorParameters::create();
-  bool readOk = readDetectorParameters("src/shallow_depth_insertion_v2/config/detector_params.yaml", detectorParams);
+  bool readOk = readDetectorParameters("src/shallow_depth_insertion/config/detector_params.yaml", detectorParams);
   if(!readOk) {
     std::cerr << "Invalid detector parameters file" << std::endl;
     return 0;
@@ -112,7 +112,7 @@ bool getCharucoPose(shallow_depth_insertion_v2::getCharucoPose::Request &req, sh
   
   // Read camera parameters from config/yaml
   cv::Mat camMatrix, distCoeffs;
-  readOk = readCameraParameters("src/shallow_depth_insertion_v2/config/camera_param.yaml", camMatrix, distCoeffs);
+  readOk = readCameraParameters("src/shallow_depth_insertion/config/camera_param.yaml", camMatrix, distCoeffs);
   if(!readOk) {
     std::cerr << "Invalid camera file" << std::endl;
     return 0;

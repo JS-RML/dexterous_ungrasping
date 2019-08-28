@@ -5,6 +5,6 @@
 
   <arg name="pipeline" default="ompl" />
 
-  <include file="$(find shallow_depth_insertion_v2)/launch/ur10/$(arg pipeline)_planning_pipeline.launch.xml" />
+  <include file="$(find shallow_depth_insertion)/launch/ur10/$(arg pipeline)_planning_pipeline.launch.xml" />
 
 </launch>

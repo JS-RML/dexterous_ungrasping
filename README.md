@@ -1,6 +1,6 @@
 # Shallow-Depth Insertion
 
-## 1. Oveview
+## 1. Overview
 
 This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel robotic manpulation technique suitable for assembling thin peg-like objects into a hole with a shallow dpeth, as can be seen in a cell phone battery insertion for example. Our technique features dexterous manipulation actions that combine into a complete insertion operation as seen in the animations below. This package is directly applicable to a simple hardware setting with the conventional parallel-jaw gripper installed on an industrial robot arm.
 
@@ -41,7 +41,7 @@ This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel 
 In your [catkin workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace):
 ```
 cd ~/catkin_ws/src
-git clone https://github.com/chjohnkim/shallow_depth_insertion_v2.git
+git clone https://github.com/chjohnkim/shallow_depth_insertion.git
 cd ..
 catkin_make
 ```
@@ -51,17 +51,17 @@ catkin_make
 SDI can be visualized in simulation through Gazebo and RVIZ. The robot arm motion is simulated but the object-robot contact interaction is currently not availble. The gripper visualization is also under development. 
 To visualize the robot arm motion:
 ```
-roslaunch shallow_depth_insertion_v2 ur10_robot.launch simulation:=true
-roslaunch shallow_depth_insertion_v2 gripper.launch sim:=true
-rosrun shallow_depth_insertion_v2 SDI_main.py
+roslaunch shallow_depth_insertion ur10_robot.launch simulation:=true
+roslaunch shallow_depth_insertion gripper.launch sim:=true
+rosrun shallow_depth_insertion SDI_main.py
 ```
 
 ### 4.2 Run with Real Robot
 If you are able to meet the basic hardware requirements (robot arm and gripper), you can execute SDI with the real robot:
 ```
-roslaunch shallow_depth_insertion_v2 ur10_robot.launch simulation:=false
-roslaunch shallow_depth_insertion_v2 gripper.launch
-rosrun shallow_depth_insertion_v2 SDI_main.py
+roslaunch shallow_depth_insertion ur10_robot.launch simulation:=false
+roslaunch shallow_depth_insertion gripper.launch
+rosrun shallow_depth_insertion SDI_main.py
 ```
 
 ### 4.3 Changing execution parameters

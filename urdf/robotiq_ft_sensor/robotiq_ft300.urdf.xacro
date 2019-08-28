@@ -37,7 +37,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_ft_sensor/visual/robotiq_ft300.STL"/>
+                    <mesh filename="package://shallow_depth_insertion/meshes/robotiq_ft_sensor/visual/robotiq_ft300.STL"/>
                 </geometry>
                 <material name="Robotiq-Black">
                     <color rgba="0.2 0.2 0.2 1.0"/>
@@ -46,7 +46,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_ft_sensor/collision/robotiq_ft300.STL"/>
+                    <mesh filename="package://shallow_depth_insertion/meshes/robotiq_ft_sensor/collision/robotiq_ft300.STL"/>
                 </geometry>
             </collision>
         </link>
@@ -56,7 +56,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_ft_sensor/visual/mountings/robotiq_ft300-G-062-COUPLING_G-50-4M6-1D6_20181119.STL"/>
+                    <mesh filename="package://shallow_depth_insertion/meshes/robotiq_ft_sensor/visual/mountings/robotiq_ft300-G-062-COUPLING_G-50-4M6-1D6_20181119.STL"/>
                 </geometry>
                 <material name="Robotiq-Grey">
                     <color rgba="0.4 0.4 0.4 1.0"/>
@@ -66,7 +66,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_ft_sensor/collision/mountings/robotiq_ft300-G-062-COUPLING_G-50-4M6-1D6_20181119.STL"/>
+                    <mesh filename="package://shallow_depth_insertion/meshes/robotiq_ft_sensor/collision/mountings/robotiq_ft300-G-062-COUPLING_G-50-4M6-1D6_20181119.STL"/>
                 </geometry>
             </collision>
         </link>

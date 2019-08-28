@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:include filename="$(find shallow_depth_insertion_v2)/urdf/robotiq_arg2f_140_model/robotiq_arg2f_transmission.xacro" />
+  <xacro:include filename="$(find shallow_depth_insertion)/urdf/robotiq_arg2f_140_model/robotiq_arg2f_transmission.xacro" />
 
   <xacro:macro name="outer_knuckle" params="prefix fingerprefix stroke">
     <link name="${prefix}${fingerprefix}_outer_knuckle">
@@ -18,7 +18,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_arg2f_140_model/visual/robotiq_arg2f_${stroke}_outer_knuckle.stl" />
+          <mesh filename="package://shallow_depth_insertion/meshes/robotiq_arg2f_140_model/visual/robotiq_arg2f_${stroke}_outer_knuckle.stl" />
         </geometry>
         <material name="">
           <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
@@ -27,7 +27,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_arg2f_140_model/collision/robotiq_arg2f_${stroke}_outer_knuckle.stl" />
+          <mesh filename="package://shallow_depth_insertion/meshes/robotiq_arg2f_140_model/collision/robotiq_arg2f_${stroke}_outer_knuckle.stl" />
         </geometry>
       </collision>
     </link>
@@ -49,7 +49,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_arg2f_140_model/visual/robotiq_arg2f_${stroke}_outer_finger.stl" />
+          <mesh filename="package://shallow_depth_insertion/meshes/robotiq_arg2f_140_model/visual/robotiq_arg2f_${stroke}_outer_finger.stl" />
         </geometry>
         <material name="">
           <color rgba="0.1 0.1 0.1 1" />
@@ -58,7 +58,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_arg2f_140_model/collision/robotiq_arg2f_${stroke}_outer_finger.stl" />
+          <mesh filename="package://shallow_depth_insertion/meshes/robotiq_arg2f_140_model/collision/robotiq_arg2f_${stroke}_outer_finger.stl" />
         </geometry>
       </collision>
     </link>
@@ -80,7 +80,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_arg2f_140_model/visual/robotiq_arg2f_${stroke}_inner_knuckle.stl" />
+          <mesh filename="package://shallow_depth_insertion/meshes/robotiq_arg2f_140_model/visual/robotiq_arg2f_${stroke}_inner_knuckle.stl" />
         </geometry>
         <material name="">
           <color rgba="0.1 0.1 0.1 1" />
@@ -89,7 +89,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_arg2f_140_model/collision/robotiq_arg2f_${stroke}_inner_knuckle.stl" />
+          <mesh filename="package://shallow_depth_insertion/meshes/robotiq_arg2f_140_model/collision/robotiq_arg2f_${stroke}_inner_knuckle.stl" />
         </geometry>
       </collision>
     </link>
@@ -111,7 +111,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_arg2f_140_model/visual/robotiq_arg2f_${stroke}_inner_finger.stl" />
+          <mesh filename="package://shallow_depth_insertion/meshes/robotiq_arg2f_140_model/visual/robotiq_arg2f_${stroke}_inner_finger.stl" />
         </geometry>
         <material name="">
           <color rgba="0.1 0.1 0.1 1" />
@@ -120,7 +120,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_arg2f_140_model/collision/robotiq_arg2f_${stroke}_inner_finger.stl" />
+          <mesh filename="package://shallow_depth_insertion/meshes/robotiq_arg2f_140_model/collision/robotiq_arg2f_${stroke}_inner_finger.stl" />
         </geometry>
       </collision>
     </link>
@@ -204,7 +204,7 @@
     </joint>
   </xacro:macro>
 
-  <xacro:include filename="$(find shallow_depth_insertion_v2)/urdf/robotiq_arg2f_140_model/robotiq_arg2f.xacro" />
+  <xacro:include filename="$(find shallow_depth_insertion)/urdf/robotiq_arg2f_140_model/robotiq_arg2f.xacro" />
 
   <xacro:macro name="finger_joint" params="prefix">
     <joint name="${prefix}finger_joint" type="revolute">

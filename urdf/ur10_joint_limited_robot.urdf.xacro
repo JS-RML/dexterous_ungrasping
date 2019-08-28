@@ -3,17 +3,17 @@
        name="ur10" >
 
   <!-- common stuff -->
-  <xacro:include filename="$(find shallow_depth_insertion_v2)/urdf/common.gazebo.xacro" />
+  <xacro:include filename="$(find shallow_depth_insertion)/urdf/common.gazebo.xacro" />
 
   <!-- ur10 -->
-  <xacro:include filename="$(find shallow_depth_insertion_v2)/urdf/ur10.urdf.xacro" />
+  <xacro:include filename="$(find shallow_depth_insertion)/urdf/ur10.urdf.xacro" />
 
   <!-- gripper -->
-  <xacro:include filename="$(find shallow_depth_insertion_v2)/urdf/robotiq_arg2f_140_model/robotiq_arg2f_140_model_macro.xacro" />
+  <xacro:include filename="$(find shallow_depth_insertion)/urdf/robotiq_arg2f_140_model/robotiq_arg2f_140_model_macro.xacro" />
   <xacro:robotiq_arg2f_140 prefix=""/>
 
   <!-- ft sensor -->
-  <xacro:include filename="$(find shallow_depth_insertion_v2)/urdf/robotiq_ft_sensor/robotiq_ft300.urdf.xacro" />
+  <xacro:include filename="$(find shallow_depth_insertion)/urdf/robotiq_ft_sensor/robotiq_ft300.urdf.xacro" />
 
   <!-- arm -->
   <xacro:ur10_robot prefix="" joint_limited="true"

@@ -1,5 +1,5 @@
 <launch>
-  <rosparam file="$(find shallow_depth_insertion_v2)/config/controllers.yaml"/>
+  <rosparam file="$(find shallow_depth_insertion)/config/controllers.yaml"/>
   <param name="use_controller_manager" value="false"/>
   <param name="trajectory_execution/execution_duration_monitoring" value="false"/>
   <param name="moveit_controller_manager" value="moveit_simple_controller_manager/MoveItSimpleControllerManager"/>

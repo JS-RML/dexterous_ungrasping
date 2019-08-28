@@ -32,7 +32,7 @@ def rotate_tuck(axis, angle, fingertip2contactB, velocity):
     
     '''
 
-    with open("/home/john/catkin_ws/src/shallow_depth_insertion_v2/config/sdi_config.yaml", 'r') as stream:
+    with open("/home/john/catkin_ws/src/shallow_depth_insertion/config/sdi_config.yaml", 'r') as stream:
         try:
             config = yaml.safe_load(stream)
         except yaml.YAMLError as exc:

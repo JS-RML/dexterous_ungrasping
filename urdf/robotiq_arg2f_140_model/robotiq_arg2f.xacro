@@ -10,7 +10,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_arg2f_140_model/visual/robotiq_arg2f_base_link.stl" />
+          <mesh filename="package://shallow_depth_insertion/meshes/robotiq_arg2f_140_model/visual/robotiq_arg2f_base_link.stl" />
         </geometry>
         <material name="">
           <color rgba="0.1 0.1 0.1 1" />
@@ -19,7 +19,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://shallow_depth_insertion_v2/meshes/robotiq_arg2f_140_model/collision/robotiq_arg2f_base_link.stl" />
+          <mesh filename="package://shallow_depth_insertion/meshes/robotiq_arg2f_140_model/collision/robotiq_arg2f_base_link.stl" />
         </geometry>
       </collision>
     </link>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(shallow_depth_insertion_v2)
+project(shallow_depth_insertion)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -108,7 +108,7 @@ find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 catkin_package(
   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 #  INCLUDE_DIRS include
-#  LIBRARIES shallow_depth_insertion_v2
+#  LIBRARIES shallow_depth_insertion
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
@@ -128,7 +128,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/shallow_depth_insertion_v2.cpp
+#   src/${PROJECT_NAME}/shallow_depth_insertion.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -139,7 +139,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/shallow_depth_insertion_v2_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/shallow_depth_insertion_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -196,7 +196,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_shallow_depth_insertion_v2.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_shallow_depth_insertion.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
@@ -207,8 +207,8 @@ include_directories(
 
 add_executable(getCharucoPose_server src/getCharucoPose_server.cpp)
 target_link_libraries(getCharucoPose_server ${catkin_LIBRARIES} ${OpenCV_LIBS} Eigen3::Eigen)
-add_dependencies(getCharucoPose_server shallow_depth_insertion_v2_gencpp)
+add_dependencies(getCharucoPose_server shallow_depth_insertion_gencpp)
 
 add_executable(CharucoPose_publisher src/CharucoPose_publisher.cpp)
 target_link_libraries(CharucoPose_publisher ${catkin_LIBRARIES} ${OpenCV_LIBS} Eigen3::Eigen)
-add_dependencies(CharucoPose_publisher shallow_depth_insertion_v2_gencpp)
+add_dependencies(CharucoPose_publisher shallow_depth_insertion_gencpp)
