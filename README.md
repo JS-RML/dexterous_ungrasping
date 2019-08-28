@@ -52,7 +52,7 @@ SDI can be visualized in simulation through Gazebo and RVIZ. The robot arm motio
 To visualize the robot arm motion:
 ```
 roslaunch shallow_depth_insertion_v2 ur10_robot.launch simulation:=true
-TODO: roslaunch gripper
+roslaunch shallow_depth_insertion_v2 gripper.launch sim:=true
 rosrun shallow_depth_insertion_v2 SDI_main.py
 ```
 
@@ -60,12 +60,29 @@ rosrun shallow_depth_insertion_v2 SDI_main.py
 If you are able to meet the basic hardware requirements (robot arm and gripper), you can execute SDI with the real robot:
 ```
 roslaunch shallow_depth_insertion_v2 ur10_robot.launch simulation:=false
-TODO: roslaunch gripper
+roslaunch shallow_depth_insertion_v2 gripper.launch
 rosrun shallow_depth_insertion_v2 SDI_main.py
 ```
 
 ### 4.3 Changing execution parameters
-TODO: Instructions on changing config file parameters. 
+The parameters of the SDI process can be specified in config/sdi_config.yaml.
+The parameters are as follows:
+- **Robot Parameter**
+    - ***tcp_speed***: Robot tool center point (TCP) speed
+- **Gripper Parameter**
+    - ***tcp2fingertip***: Distance from TCP to gripper fingertip
+    - ***finger_thickness***: Thickness of the robot finger
+    - ***gripper_speed***: Gripper actuation speed between 0.013 and 0.100
+    - ***gripper_force***: Gripper force between 0 and 100 (%)
+- **Object Dimension**
+    - ***object_thickness***: object thickness in meters
+    - ***object_length***: object length in meters
+- **SDI configuration**:
+    - ***theta_0***: Angle between object and hole prior to regrasping
+    - ***delta_0***: Distance from fingertip to object tip within gripper in meters
+    - ***psi_regrasp***: Angle between object and upper finger after regrasping
+    - ***theta_tilt***: Angle to tilt after regrasping
+    - ***axis***: Axis and direction to rotate about using right-hand rule
 
 ## 5. Background
 SDI is composed of three primitive operations: **tilt**, **regrasp**, and **tuck**. The three manipulation primitives are utilized to navigate the configuration space of the object-gripper-hole system, which is parameterized as follows:
