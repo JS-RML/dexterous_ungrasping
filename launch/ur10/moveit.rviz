@@ -4,10 +4,13 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Global Options1
         - /MotionPlanning1/Scene Robot1
         - /MotionPlanning1/Planning Request1
         - /MotionPlanning1/Planning Metrics1
         - /MotionPlanning1/Planned Path1
+        - /Axes1
+        - /Marker1
       Splitter Ratio: 0.742560029
     Tree Height: 921
   - Class: rviz/Help
@@ -147,6 +150,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          robot_platform:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           robotiq_arg2f_base_link:
             Alpha: 1
             Show Axes: false
@@ -161,7 +169,17 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          temp:
+          table:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          temp1:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          temp2:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -318,6 +336,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          robot_platform:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           robotiq_arg2f_base_link:
             Alpha: 1
             Show Axes: false
@@ -332,7 +355,17 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          temp:
+          table:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          temp1:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          temp2:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -373,8 +406,16 @@ Visualization Manager:
       Enabled: true
       Length: 1
       Name: Axes
-      Radius: 0.0199999996
+      Radius: 0.00499999989
       Reference Frame: <Fixed Frame>
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /viz
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
       Value: true
   Enabled: true
   Global Options:
@@ -392,39 +433,39 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 1.64879346
+      Distance: 0.171418443
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.967839003
-        Y: 0.951789141
-        Z: 1.84774444e-06
+        X: 0.597104073
+        Y: 0.285646766
+        Z: 1.82119049e-06
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.304796308
+      Pitch: -0.225203127
       Target Frame: world
       Value: XYOrbit (rviz)
-      Yaw: 1.11676824
+      Yaw: 1.54177153
     Saved: ~
 Window Geometry:
   Displays:
-    collapsed: true
+    collapsed: false
   Height: 1056
   Help:
     collapsed: false
-  Hide Left Dock: true
+  Hide Left Dock: false
   Hide Right Dock: false
   MotionPlanning:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002ad000003dafc020000000afb000000100044006900730070006c0061007900730000000028000003da000000d700fffffffb0000000800480065006c00700000000342000000bb0000007300fffffffb0000000a0056006900650077007300000003b0000000b0000000ad00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004a00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670000000107000001930000018300fffffffb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006700000001990000028e0000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff00000000000000000000073f000003da00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002ad000003dafc020000000afb000000100044006900730070006c0061007900730100000028000003da000000d700fffffffb0000000800480065006c00700000000342000000bb0000007300fffffffb0000000a0056006900650077007300000003b0000000b0000000ad00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004a00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670000000107000001930000018300fffffffb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006700000001990000028e0000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff00000000000000000000048c000003da00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1855

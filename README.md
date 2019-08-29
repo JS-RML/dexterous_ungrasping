@@ -35,7 +35,8 @@ This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel 
 - Our package was developed in [**Ubuntu 16.04**](http://releases.ubuntu.com/16.04/) and [**ROS Kinetic**](http://wiki.ros.org/ROS/Installation).
 - [**MoveIt!**](http://docs.ros.org/kinetic/api/moveit_tutorials/html/index.html): ROS robot planning framework
 - [**ur_modern_driver**](https://github.com/ros-industrial/ur_modern_driver): ROS driver for UR10 robot controller from Universal Robots
-- [**robotiq**](https://github.com/ros-industrial/robotiq): ROS driver for Robotiq Adaptive Grippers and Robotiq Force Torque Sensor
+- [**robotiq_2finger_grippers**](https://github.com/chjohnkim/robotiq_2finger_grippers.git): ROS driver for Robotiq Adaptive Grippers
+- [**Eigen3 version 3.3**](https://askubuntu.com/questions/1068232/how-to-update-libeigen3-to-version-3-3-on-16-04-xenial)
 
 ## 3. Build on ROS
 In your [catkin workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace):
@@ -48,7 +49,7 @@ catkin_make
 
 ## 4. Run Shallow-Depth Insertion
 ### 4.1 Run in Simulation
-SDI can be visualized in simulation through Gazebo and RVIZ. The robot arm motion is simulated but the object-robot contact interaction is currently not availble. The gripper visualization is also under development. 
+SDI can be visualized in simulation through Gazebo and RVIZ. The robot arm motion is simulated but the object-robot contact interaction is currently not availble. 
 To visualize the robot arm motion:
 ```
 roslaunch shallow_depth_insertion ur10_robot.launch simulation:=true

@@ -181,20 +181,6 @@
     </joint>
   </xacro:macro>
 
-  <!--JOHN-->
-  <xacro:macro name="left_outer_knuckle_joint" params="prefix">
-    <joint name="${prefix}left_outer_knuckle_joint" type="revolute">
-      <origin xyz="0 0.030601 0.054905" rpy="${pi / 2 + .725} 0 ${pi}" />
-      <parent link="${prefix}robotiq_arg2f_base_link" />
-      <child link="${prefix}left_outer_knuckle" />
-      <axis xyz="1 0 0" />
-      <limit lower="-0.725" upper="0.725" velocity="2.0" effort="1000" />
-    <mimic joint="${prefix}gripper_finger_joint" multiplier="-1" offset="0" />
-    </joint>
-    <xacro:finger_joints prefix="${prefix}" fingerprefix="left" reflect="1.0"/>
-  </xacro:macro>
-  <!--JOHN-->
-
   <xacro:macro name="inner_finger_pad_joint" params="prefix fingerprefix">
     <joint name="${prefix}${fingerprefix}_inner_finger_pad_joint" type="fixed">
       <origin xyz="0 0.0457554015893473 -0.0272203446692936" rpy="0 0 0" />
@@ -207,7 +193,7 @@
   <xacro:include filename="$(find shallow_depth_insertion)/urdf/robotiq_arg2f_140_model/robotiq_arg2f.xacro" />
 
   <xacro:macro name="finger_joint" params="prefix">
-    <joint name="${prefix}finger_joint" type="revolute">
+    <joint name="${prefix}my_finger_joint" type="revolute">
       <origin xyz="0 -0.030601 0.054905" rpy="${pi / 2 + .725} 0 0" />
       <parent link="${prefix}robotiq_arg2f_base_link" />
       <child link="${prefix}left_outer_knuckle" />
@@ -240,8 +226,7 @@
   </xacro:macro>
 
   <!-- Indirect Joint to Visualize Gripper movement by John -->
-
-  <link name="temp">
+  <link name="temp1">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
@@ -249,13 +234,39 @@
       </geometry>
     </visual>
   </link>
-
   <joint name="gripper_finger_joint" type="revolute">
     <origin xyz="0 0 0" rpy="0 0 0" />
     <parent link="world" />
-    <child link="temp" />
+    <child link="temp1" />
     <axis xyz="1 0 0" />
     <limit lower="0" upper="0.7" velocity="2.0" effort="1000" />
   </joint>
-    
+
+  <link name="temp2">
+    <visual>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="1" />
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0" />
+    </inertial>
+  </link>
+  <joint name="finger_joint" type="revolute">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="world" />
+    <child link="temp2" />
+    <axis xyz="1 0 0" />
+    <limit lower="0" upper="0.7" velocity="2.0" effort="1000" />
+  </joint>
+
+  
+  <!-- Indirect Joint to Visualize Gripper movement by John -->
+
 </robot>
