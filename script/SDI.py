@@ -41,13 +41,18 @@ if __name__ == '__main__':
         theta_tilt = config['theta_tilt']
         axis =  config['axis']
         object_thickness = config['object_thickness']
+        object_length = config['object_length']
+        tcp2fingertip = config['tcp2fingertip']
+        table_height_wrt_world = -0.02
 
         group.set_max_velocity_scaling_factor(tcp_speed)
-        motion_primitives.set_joint([0, -90, 90, 90, 90, 0])  
-        p = group.get_current_pose().pose
-        center = [p.position.x,p.position.y,p.position.z-config['tcp2fingertip']]
-        
         Robotiq.goto(robotiq_client, pos=object_thickness, speed=config['gripper_speed'], force=config['gripper_force'], block=False) 
+        motion_primitives.set_joint([0, -90, 90, 90, 90, 0])  
+        init_pose = [0.6566, 0.1638, table_height_wrt_world + object_length + tcp2fingertip - delta_0, -0.7071, 0.000, 0.7071, 0.000]
+        
+        motion_primitives.set_pose(init_pose)
+        p = group.get_current_pose().pose
+        center = [p.position.x,p.position.y,p.position.z - tcp2fingertip - object_length + delta_0]
         
         tilt.tilt(center, axis, int(90-theta_0), tcp_speed)
         regrasp.regrasp(np.multiply(axis, -1), int(psi_regrasp), tcp_speed)

@@ -1,5 +1,5 @@
 # Robot parameters 
-tcp_speed: 0.02
+tcp_speed: 0.1
 
 # Gripper parameters
 tcp2fingertip: 0.2765 # distance from tcp to gripper fingertip

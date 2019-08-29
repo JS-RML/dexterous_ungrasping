@@ -4,10 +4,13 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Global Options1
         - /MotionPlanning1/Scene Robot1
         - /MotionPlanning1/Planning Request1
         - /MotionPlanning1/Planning Metrics1
         - /MotionPlanning1/Planned Path1
+        - /Axes1
+        - /Axes1/Status1
       Splitter Ratio: 0.742560029
     Tree Height: 921
   - Class: rviz/Help
@@ -147,6 +150,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          robot_platform:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           robotiq_arg2f_base_link:
             Alpha: 1
             Show Axes: false
@@ -157,6 +165,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
           shoulder_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          table:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -318,6 +331,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          robot_platform:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           robotiq_arg2f_base_link:
             Alpha: 1
             Show Axes: false
@@ -328,6 +346,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
           shoulder_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          table:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -373,7 +396,7 @@ Visualization Manager:
       Enabled: true
       Length: 1
       Name: Axes
-      Radius: 0.0199999996
+      Radius: 0.00499999989
       Reference Frame: <Fixed Frame>
       Value: true
   Enabled: true
@@ -392,25 +415,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 1.64879346
+      Distance: 1.36544847
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.967839003
-        Y: 0.951789141
+        X: 0.402920961
+        Y: 0.144013703
         Z: 1.84774444e-06
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.304796308
+      Pitch: 0.21979636
       Target Frame: world
       Value: XYOrbit (rviz)
-      Yaw: 1.11676824
+      Yaw: 1.23676813
     Saved: ~
 Window Geometry:
   Displays:
