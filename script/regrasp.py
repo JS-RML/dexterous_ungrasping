@@ -12,6 +12,7 @@ import motion_primitives
 import tilt
 import yaml
 import actionlib
+import visualization
 
 from robotiq_2f_gripper_msgs.msg import CommandRobotiqGripperFeedback, CommandRobotiqGripperResult, CommandRobotiqGripperAction, CommandRobotiqGripperGoal
 from robotiq_2f_gripper_control.robotiq_2f_gripper_driver import Robotiq2FingerGripperDriver as Robotiq
@@ -34,6 +35,8 @@ def regrasp(axis, angle, velocity):
     tcp2fingertip = config['tcp2fingertip']
     contact_A_e = [tcp2fingertip, -config['object_thickness']/2, 0, 1] #TODO: depends on axis direction
     contact_A_w = np.matmul(T_we, contact_A_e) 
+
+    visualization.visualizer(contact_A_w[:3], "s", 0.01, 1) #DEBUG
 
     # Interpolate orientation poses via quaternion slerp
     q = helper.axis_angle2quaternion(axis, angle)

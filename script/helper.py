@@ -60,5 +60,7 @@ def quaternion2axis_angle(q):
         y = q[1]/s
         z = q[2]/s
     return [x, y, z, angle]
+
+
         
 
