@@ -23,7 +23,7 @@
 		 wrist_1_lower_limit="${-pi}" wrist_1_upper_limit="${pi}"
 		 wrist_2_lower_limit="${-pi}" wrist_2_upper_limit="${pi}"
 		 wrist_3_lower_limit="${-pi}" wrist_3_upper_limit="${pi}"
-/>
+  />
 
   <link name="world" />
 
@@ -42,5 +42,45 @@
     <child link = "robotiq_arg2f_base_link" />
     <origin xyz="0.0 0.0 -0.0065" rpy="0.0 0.0 0.0" />
   </joint>
-  
+
+  <!-- environment -->
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+  <material name="blue">
+    <color rgba="0 0 0.8 1"/>
+  </material>
+
+  <link name="robot_platform">
+    <visual>
+      <geometry>
+        <box size="0.25 0.25 0.02"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.01"/>
+      <material name="white"/>
+    </visual>
+  </link>
+
+  <joint name="robot_to_robot_platform" type="fixed">
+    <parent link="base_link"/>
+    <child link="robot_platform"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+
+  <link name="table">
+    <visual>
+      <geometry>
+        <box size="1.8 2.4 0.1"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0.64 -0.94 -0.05"/>
+      <material name="white"/>
+    </visual>
+  </link>
+
+  <joint name="robot_platform_to_table" type="fixed">
+    <parent link="robot_platform"/>
+    <child link="table"/>
+    <origin xyz="0 0 -0.02"/>
+  </joint>
+
 </robot>
