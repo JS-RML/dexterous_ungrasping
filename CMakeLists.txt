@@ -212,3 +212,7 @@ add_dependencies(getCharucoPose_server shallow_depth_insertion_gencpp)
 add_executable(CharucoPose_publisher src/CharucoPose_publisher.cpp)
 target_link_libraries(CharucoPose_publisher ${catkin_LIBRARIES} ${OpenCV_LIBS} Eigen3::Eigen)
 add_dependencies(CharucoPose_publisher shallow_depth_insertion_gencpp)
+
+add_executable(camera_calibration src/camera_calibration.cpp)
+target_link_libraries(camera_calibration ${catkin_LIBRARIES} ${OpenCV_LIBS})
+add_dependencies(camera_calibration shallow_depth_insertion_gencpp)

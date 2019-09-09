@@ -7,11 +7,12 @@
 #include <opencv2/aruco/charuco.hpp>
 #include <vector>
 #include <iostream>
+#include "geometry_msgs/Pose.h"
 
 using namespace std;
 using namespace cv;
 
-VideoCapture cap(1); // open the default camera
+VideoCapture cap(0); // open the default camera
 
 namespace {
 const char* about = "Pose estimation using a ChArUco board";
@@ -85,11 +86,11 @@ static bool readCharucoParameters(std::string filename, int &squaresX, int &squa
 }
 
 // Service callback function: detect charuco board and return pose  
-bool getCharucoPose()
+bool getCharucoPose(ros::Publisher pub)
 {
   int squaresX, squaresY;
   float squareLength, markerLength;
-  readCharucoParameters("src/shallow_depth_insertion/config/charuco_param.yaml", squaresX, squaresY, squareLength, markerLength);
+  readCharucoParameters("/home/john/catkin_ws/src/shallow_depth_insertion/config/charuco_param.yaml", squaresX, squaresY, squareLength, markerLength);
     
   int dictionaryId = 0;
   bool showRejected = 0;
@@ -104,7 +105,7 @@ bool getCharucoPose()
 
   // Read detector parameters from config/yaml
   cv::Ptr<cv::aruco::DetectorParameters> detectorParams = cv::aruco::DetectorParameters::create();
-  bool readOk = readDetectorParameters("src/shallow_depth_insertion/config/detector_params.yaml", detectorParams);
+  bool readOk = readDetectorParameters("/home/john/catkin_ws/src/shallow_depth_insertion/config/detector_params.yaml", detectorParams);
   if(!readOk) {
     std::cerr << "Invalid detector parameters file" << std::endl;
     return 0;
@@ -112,7 +113,7 @@ bool getCharucoPose()
   
   // Read camera parameters from config/yaml
   cv::Mat camMatrix, distCoeffs;
-  readOk = readCameraParameters("src/shallow_depth_insertion/config/camera_param.yaml", camMatrix, distCoeffs);
+  readOk = readCameraParameters("/home/john/catkin_ws/src/shallow_depth_insertion/config/camera_param.yaml", camMatrix, distCoeffs);
   if(!readOk) {
     std::cerr << "Invalid camera file" << std::endl;
     return 0;
@@ -161,21 +162,17 @@ bool getCharucoPose()
     Eigen::Matrix<double, 3, 3> eigMat;
     cv::cv2eigen(rot, eigMat);
     Eigen::Quaterniond q(eigMat);
-  //if(validPose){
-  //  res.x = tvec[0];
-  //  res.y = tvec[1];
-  //  res.z = tvec[2];
-  //  res.q0 = q.w();
-  //  res.qx = q.x();
-  //  res.qy = q.y();
-  //  res.qz = q.z();
-  //  ROS_INFO("sending back response:\n x = %f \n y = %f \n z = %f \n q0 = %f \n qx = %f \n qy = %f \n qz = %f \n", 
-  //          (float)res.x, (float)res.y, (float)res.z, 
-  //          (float)res.q0, (float)res.qx, (float)res.qy, (float)res.qz);
-  //}
-  //else{
-  //  ROS_INFO("sending back response: charuco not found.");
-  //} 
+
+    geometry_msgs::Pose msg;
+    msg.position.x = tvec[0];
+    msg.position.y = tvec[1];
+    msg.position.z = tvec[2];
+    msg.orientation.x = q.x();
+    msg.orientation.y = q.y();
+    msg.orientation.z = q.z();
+    msg.orientation.w = q.w();
+    
+    pub.publish(msg);
 
     // draw results
     image.copyTo(imageCopy);
@@ -207,11 +204,11 @@ int main(int argc, char **argv)
   if(!cap.isOpened())  // check if we succeeded
     return -1;
 
-  ros::init(argc, argv, "getCharucoPose_server");
+  ros::init(argc, argv, "CharucoPose_publisher");
   ros::NodeHandle n;
-  //ros::ServiceServer service = n.advertiseService("getCharucoPose", getCharucoPose);
-  getCharucoPose();
-  ROS_INFO("Ready to get charuco pose.");
+  ros::Publisher CharucoPose_pub = n.advertise<geometry_msgs::Pose>("CharucoPose", 1);
+  getCharucoPose(CharucoPose_pub);
+  ROS_INFO("Charuco_Poes publisher ended.");
   ros::spin();
 
   return 0;

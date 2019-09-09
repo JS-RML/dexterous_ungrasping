@@ -4,11 +4,20 @@ import math
 import rospy
 import copy
 import moveit_commander 
+import yaml
 
 moveit_commander.roscpp_initialize(sys.argv) #initialize the moveit commander
 robot = moveit_commander.RobotCommander() #define the robot
 scene = moveit_commander.PlanningSceneInterface() #define the scene
 group = moveit_commander.MoveGroupCommander("manipulator") #define the planning group (from the moveit packet 'manipulator' planning group)
+
+with open("/home/john/catkin_ws/src/shallow_depth_insertion/config/sdi_config.yaml", 'r') as stream:
+    try:
+        config = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+        print(exc)
+tcp_speed = config['tcp_speed']
+group.set_max_velocity_scaling_factor(tcp_speed)
 
 def set_pose(pose):
     '''Set robot pose.  

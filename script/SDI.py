@@ -47,33 +47,24 @@ if __name__ == '__main__':
         tcp2fingertip = config['tcp2fingertip']
         table_height_wrt_world = -0.02
 
-        group.set_max_velocity_scaling_factor(tcp_speed)
-        Robotiq.goto(robotiq_client, pos=object_thickness, speed=config['gripper_speed'], force=config['gripper_force'], block=False) 
-        motion_primitives.set_joint([0, -90, 90, 90, 90, 0])  
-        init_pose = [0.6566, 0.1638, table_height_wrt_world + object_length + tcp2fingertip - delta_0, -0.7071, 0.000, 0.7071, 0.000]
-        
-        motion_primitives.set_pose(init_pose)
         p = group.get_current_pose().pose
+        trans_tool0 = [p.position.x, p.position.y, p.position.z]
+        rot_tool0 = [p.orientation.x, p.orientation.y, p.orientation.z, p.orientation.w] 
+        T_wg = tf.TransformerROS().fromTranslationRotation(trans_tool0, rot_tool0)
+        P_gg_target = [0, 0, tcp2fingertip+object_length-delta_0, 1]
+        P_wg_target = np.matmul(T_wg, P_gg_target)
+        #target_pose = np.concatenate((P_wg_target[0:3], rot_tool0), axis=None)
 
-        '''
-        #TEST GRIPPER LENGTH
-        pos_initial = [p.position.x, p.position.y, p.position.z]
-        ori_initial = [p.orientation.x, p.orientation.y, p.orientation.z, p.orientation.w]
-        T_we = tf.TransformListener().fromTranslationRotation(pos_initial, ori_initial) 
-        tcp2fingertip = config['tcp2fingertip']
-        contact_A_e = [tcp2fingertip, -object_thickness/2, 0, 1] 
-        contact_A_w = np.matmul(T_we, contact_A_e) 
-        visualization.visualizer(contact_A_w[:3], "s", 0.005, 2) #DEBUG
-        #TEST GRIPPER LENGTH
-        '''
-
-        center = [p.position.x,p.position.y,p.position.z - tcp2fingertip - object_length + delta_0]
-        visualization.visualizer(center, "s", 0.01, 0)
-        rospy.sleep(0.5)
-        tilt.tilt(center, axis, int(90-theta_0), tcp_speed)
+        group.set_max_velocity_scaling_factor(tcp_speed)
+        #pose = [-0.21, 0.830, 0.01+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
+        #motion_primitives.set_pose(pose)
+        Robotiq.goto(robotiq_client, pos=object_thickness+0.004, speed=config['gripper_speed'], force=config['gripper_force'], block=False) 
+        rospy.sleep(5)
+        Robotiq.goto(robotiq_client, pos=object_thickness, speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
+        center = [pose[0], pose[1], pose[2] - tcp2fingertip - object_length + delta_0]
+        tilt.tilt(center, axis, int(90-theta_0), tcp_speed+0.02)
         regrasp.regrasp(np.multiply(axis, -1), int(psi_regrasp), tcp_speed)
-        tilt.tilt(center, axis, int(theta_tilt), tcp_speed)
-        tuck.rotate_tuck(np.multiply(axis, -1), int(theta_0-theta_tilt), 0.03, tcp_speed)
-        rospy.spin()
+        tilt.tilt(center, axis, int(theta_tilt), tcp_speed+0.02)
+        tuck.rotate_tuck(np.multiply(axis, -1), int(theta_0-theta_tilt+10), 0.03, tcp_speed+0.02)
         
     except rospy.ROSInterruptException: pass
