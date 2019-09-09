@@ -35,6 +35,7 @@ This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel 
 - Our package was developed in [**Ubuntu 16.04**](http://releases.ubuntu.com/16.04/) and [**ROS Kinetic**](http://wiki.ros.org/ROS/Installation).
 - [**MoveIt!**](http://docs.ros.org/kinetic/api/moveit_tutorials/html/index.html): ROS robot planning framework
 - [**ur_modern_driver**](https://github.com/ros-industrial/ur_modern_driver): ROS driver for UR10 robot controller from Universal Robots
+- [**universal_robots**](http://wiki.ros.org/action/show/universal_robots?action=show&redirect=universal_robot): ROS-Industrial support for Univrsal Robots manipulators
 - [**robotiq_2finger_grippers**](https://github.com/chjohnkim/robotiq_2finger_grippers.git): ROS driver for Robotiq Adaptive Grippers
 - [**Eigen3 version 3.3**](https://askubuntu.com/questions/1068232/how-to-update-libeigen3-to-version-3-3-on-16-04-xenial)
 
