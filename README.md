@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel robotic manpulation technique suitable for assembling thin peg-like objects into a hole with a shallow depth, as can be seen in a cell phone battery insertion for example. Our technique features dexterous manipulation actions that combine into a complete insertion operation as seen in the animations below. This package is directly applicable to a simple hardware setting with the conventional parallel-jaw gripper installed on an industrial robot arm.
+This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel robotic manipulation technique suitable for assembling thin peg-like objects into a hole with a shallow depth, as can be seen in a cell phone battery insertion for example. Our technique features dexterous manipulation actions that combine into a complete insertion operation as seen in the animations below. This package is directly applicable to a simple hardware setting with the conventional parallel-jaw gripper installed on an industrial robot arm.
 
 **Published Article**
 - C. H. Kim and J. Seo, "[Shallow-Depth Insertion: Peg in Shallow Hole Through Robotic In-Hand Manipulation](https://ieeexplore.ieee.org/document/8598749)," in *IEEE Robotics and Automation Letters*, vol. 4, no. 2, pp. 383-390, April 2019.
