@@ -1,5 +1,5 @@
 # Robot parameters 
-tcp_speed: 0.02
+tcp_speed: 0.1
 
 # Gripper parameters
 tcp2fingertip: 0.28 # distance from tcp to gripper fingertip
@@ -14,13 +14,17 @@ object_thickness: 0.002 # object thickness in meters
 object_length: 0.178 # object length in meters
 
 # Initial configuration
-theta_0: 30.0
+theta_0: 45.0
 delta_0: 0.055 # distance from fingertip to object tip within gripper
 
 # Intermediate configuration
 psi_regrasp: 67.0
-theta_tilt: 20.0
+theta_tilt: 40
+tuck: 30
 
 # Action axis
 axis: [1, 0, 0]
+
+# Simulation
+sim: 1
 
