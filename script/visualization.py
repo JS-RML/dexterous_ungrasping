@@ -3,6 +3,7 @@
 import roslib; roslib.load_manifest('visualization_marker_tutorials')
 from visualization_msgs.msg import Marker
 from visualization_msgs.msg import MarkerArray
+from geometry_msgs.msg import Point
 import rospy
 import math
 import threading
@@ -35,7 +36,36 @@ def visualizer(position, marker_type, scale, id):
     x.daemon = True
     x.start()
 
-   
+def thin_object(point1, point2, thickness, id): 
+    marker = Marker()
+    marker.header.frame_id = "/world"
+    marker.type = marker.LINE_STRIP
+    marker.action = marker.ADD
+    # marker scale
+    marker.scale.x = thickness
+    # marker color
+    marker.color.a = 1.0
+    marker.color.r = 0.0
+    marker.color.g = 0.0
+    marker.color.b = 1.0
+    # marker line points
+    marker.points = []
+    # first point
+    first_line_point = Point()
+    first_line_point.x = point1[0]
+    first_line_point.y = point1[1]
+    first_line_point.z = point1[2]
+    marker.points.append(first_line_point)
+    # second point
+    second_line_point = Point()
+    second_line_point.x = point2[0]
+    second_line_point.y = point2[1]
+    second_line_point.z = point2[2]
+    marker.points.append(second_line_point)
+    marker.id = id
+    x = threading.Thread(target=visualizer_thread, args=(marker,))
+    x.daemon = True
+    x.start()
 
 if __name__ == '__main__':
     try:
