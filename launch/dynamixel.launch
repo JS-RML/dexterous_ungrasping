@@ -1,0 +1,8 @@
+<launch>
+    <!-- Launch dynamixel controller manager -->
+    <include file="$(find shallow_depth_insertion)/launch/dynamixel/controller_manager.launch">
+    </include>
+    <!-- Start dynamixel tilt controller -->
+    <include file="$(find shallow_depth_insertion)/launch/dynamixel/start_tilt_controller.launch">
+    </include>
+</launch>

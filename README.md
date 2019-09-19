@@ -38,6 +38,8 @@ This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel 
 - [**universal_robots**](http://wiki.ros.org/action/show/universal_robots?action=show&redirect=universal_robot): ROS-Industrial support for Univrsal Robots manipulators
 - [**robotiq_2finger_grippers**](https://github.com/chjohnkim/robotiq_2finger_grippers.git): ROS driver for Robotiq Adaptive Grippers
 - [**Eigen3 version 3.3**](https://askubuntu.com/questions/1068232/how-to-update-libeigen3-to-version-3-3-on-16-04-xenial)
+- **Optional**: [**dynamixel_motor**](http://wiki.ros.org/dynamixel_motor): ROS interface with Robotis Dynamixel line of servo motors
+
 
 ## 3. Build on ROS
 In your [catkin workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace):
@@ -64,6 +66,11 @@ If you are able to meet the basic hardware requirements (robot arm and gripper),
 roslaunch shallow_depth_insertion ur10_robot.launch simulation:=false
 roslaunch shallow_depth_insertion gripper.launch
 rosrun shallow_depth_insertion SDI_main.py
+```
+To control the extendable palm via dynamixel servos:
+```
+roslaunch shallow_depth_insertion dynamixel.launch
+rosrun shallow_depth insertion dynamixel.py
 ```
 
 ### 4.3 Changing execution parameters
