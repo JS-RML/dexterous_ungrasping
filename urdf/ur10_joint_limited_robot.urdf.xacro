@@ -40,7 +40,8 @@
   <joint name="gripper2sensor" type="fixed">
     <parent link="robotiq_ft_frame_id" />
     <child link = "robotiq_arg2f_base_link" />
-    <origin xyz="0.0 0.0 -0.001" rpy="0.0 0.0 -1.57079632679" />
+    <origin xyz="0.0 0.0 0.016" rpy="0.0 0.0 -1.57079632679" />
+    <!--origin xyz="0.0 0.0 -0.0065" rpy="0.0 0.0 0.0" /-->
   </joint>
 
   <!-- environment -->
