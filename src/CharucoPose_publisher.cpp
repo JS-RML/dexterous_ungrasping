@@ -1,6 +1,6 @@
 #include "opencv2/opencv.hpp"
 #include <opencv2/aruco.hpp>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include <opencv2/core/eigen.hpp>
 #include "shallow_depth_insertion/getCharucoPose.h"
 #include "ros/ros.h"
@@ -12,7 +12,7 @@
 using namespace std;
 using namespace cv;
 
-VideoCapture cap(0); // open the default camera
+VideoCapture cap(1); // open the default camera
 
 namespace {
 const char* about = "Pose estimation using a ChArUco board";
