@@ -19,7 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
 # find_package(Boost REQUIRED COMPONENTS system)
 
 find_package(OpenCV 3.3.1 EXACT REQUIRED)
-find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+#find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -123,7 +123,6 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
-  ${Eigen_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -204,15 +203,16 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-
 add_executable(getCharucoPose_server src/getCharucoPose_server.cpp)
-target_link_libraries(getCharucoPose_server ${catkin_LIBRARIES} ${OpenCV_LIBS} Eigen3::Eigen)
+target_link_libraries(getCharucoPose_server ${catkin_LIBRARIES} ${OpenCV_LIBS})
 add_dependencies(getCharucoPose_server shallow_depth_insertion_gencpp)
 
 add_executable(CharucoPose_publisher src/CharucoPose_publisher.cpp)
-target_link_libraries(CharucoPose_publisher ${catkin_LIBRARIES} ${OpenCV_LIBS} Eigen3::Eigen)
+target_link_libraries(CharucoPose_publisher ${catkin_LIBRARIES} ${OpenCV_LIBS})
 add_dependencies(CharucoPose_publisher shallow_depth_insertion_gencpp)
 
 add_executable(camera_calibration src/camera_calibration.cpp)
 target_link_libraries(camera_calibration ${catkin_LIBRARIES} ${OpenCV_LIBS})
 add_dependencies(camera_calibration shallow_depth_insertion_gencpp)
+
+

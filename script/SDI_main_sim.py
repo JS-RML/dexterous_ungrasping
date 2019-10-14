@@ -49,31 +49,30 @@ if __name__ == '__main__':
         sim = config['sim']
         table_height_wrt_world = -0.02
 
-        # read position from real robot. 
-        p = group.get_current_pose().pose
-        trans_tool0 = [p.position.x, p.position.y, p.position.z]
-        rot_tool0 = [p.orientation.x, p.orientation.y, p.orientation.z, p.orientation.w] 
-        T_wg = tf.TransformerROS().fromTranslationRotation(trans_tool0, rot_tool0)
-        P_g_center = [tcp2fingertip+object_length-delta_0, 0, 0, 1]
-        P_w_center = np.matmul(T_wg, P_g_center)
+        # If simulation, set robot initial position;
+        pose = [-0.3, 0.830, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
+        motion_primitives.set_pose(pose)
         
         # Set TCP speed     
         group.set_max_velocity_scaling_factor(tcp_speed)
         
-        Robotiq.goto(robotiq_client, pos=0, speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
-        # Tilt
-        tilt.tilt(center, axis, int(90-theta_0), tcp_speed)
-        
-
-
-        '''
         # Set gripper position
-        Robotiq.goto(robotiq_client, pos=object_thickness+0.005, speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
+        Robotiq.goto(robotiq_client, pos=object_thickness, speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
         
-        center = [P_w_center[0], P_w_center[1], P_w_center[2]]
+        center = [pose[0], pose[1], pose[2] - tcp2fingertip - object_length + delta_0]
+        
+        visualization.visualizer(center, 1, 0.01, 2)
         
         # Tilt
         tilt.tilt(center, axis, int(90-theta_0), tcp_speed)
+        
+        # Visualize object during regrasp
+        p = group.get_current_pose().pose
+        object_v = [center[0]-p.position.x, center[1]-p.position.y, center[2]-p.position.z]
+        object_uv = object_v / np.sum(np.power(object_v,2))**0.5
+        object_edge = np.multiply(object_uv, object_length)
+        visualization.thin_object(center, np.subtract(center, object_edge), object_thickness, 3)
+        visualization.visualizer(np.subtract(center, object_edge), 1, 0.01, 4)
         
         # Regrasp
         regrasp.regrasp(np.multiply(axis, -1), int(psi_regrasp), tcp_speed)
@@ -83,7 +82,8 @@ if __name__ == '__main__':
         
         # Tuck
         tuck.rotate_tuck(np.multiply(axis, -1), int(tuck_angle), 0.03, tcp_speed)
-        '''
-        #rospy.spin()
+        
+        rospy.spin()
+        
         
     except rospy.ROSInterruptException: pass
