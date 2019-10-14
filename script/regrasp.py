@@ -107,7 +107,7 @@ def regrasp(axis, angle, velocity):
         opposite = a - d
         width = b + c
         #pos = int((opening_at_zero - width)/config['opening_per_count'])
-        Robotiq.goto(robotiq_client, pos=width+0.004, speed=config['gripper_speed'], force=config['gripper_force'], block=False) 
+        Robotiq.goto(robotiq_client, pos=width+0.003, speed=config['gripper_speed'], force=config['gripper_force'], block=False) 
         psi = round(psi, 2)
    
 if __name__ == '__main__':
