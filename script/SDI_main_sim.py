@@ -75,7 +75,9 @@ if __name__ == '__main__':
         visualization.visualizer(np.subtract(center, object_edge), 1, 0.01, 4)
         
         # Regrasp
-        regrasp.regrasp(np.multiply(axis, -1), int(psi_regrasp), tcp_speed)
+        #regrasp.regrasp(np.multiply(axis, -1), int(psi_regrasp), tcp_speed)
+        regrasp.palm_regrasp(np.multiply(axis, -1), int(psi_regrasp), tcp_speed)
+
 
         # Tilt
         tilt.tilt(center, axis, int(theta_tilt), tcp_speed)

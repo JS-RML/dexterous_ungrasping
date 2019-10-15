@@ -11,7 +11,7 @@ import motion_primitives
 import tilt
 import yaml
 import actionlib
-
+import dynamixel
 from robotiq_2f_gripper_msgs.msg import CommandRobotiqGripperFeedback, CommandRobotiqGripperResult, CommandRobotiqGripperAction, CommandRobotiqGripperGoal
 from robotiq_2f_gripper_control.robotiq_2f_gripper_driver import Robotiq2FingerGripperDriver as Robotiq
 
@@ -63,6 +63,48 @@ def rotate_tuck(axis, angle, fingertip2contactB, velocity):
 
     tilt.tilt(contact_B_w[:3], axis, angle, velocity)
 
+def push_tuck(axis, angle, fingertip2contactB, velocity, tuck):
+    '''Rotate tuck primitive motion of robot. 
+
+    Parameters:
+        axis (list): 3-D vector of rotation axis (right-hand rule)
+        angle (double): angle of tucking 
+        fingertip2contactB (double): distance from fingertip to contact B in meters
+        velocity (double): robot velocity between 0 and 1
+    Returns:
+    
+    '''
+
+    with open("/home/john/catkin_ws/src/shallow_depth_insertion/config/sdi_config.yaml", 'r') as stream:
+        try:
+            config = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+    pose_target = group.get_current_pose().pose
+    pos_initial = [pose_target.position.x, pose_target.position.y, pose_target.position.z]
+    ori_initial = [pose_target.orientation.x, pose_target.orientation.y, pose_target.orientation.z, pose_target.orientation.w]
+    T_we = tf.TransformListener().fromTranslationRotation(pos_initial, ori_initial) 
+
+    action_name = rospy.get_param('~action_name', 'command_robotiq_action')
+    robotiq_client = actionlib.SimpleActionClient(action_name, CommandRobotiqGripperAction)
+
+    # TODO: use pjg module
+    #msg = rospy.wait_for_message('/CModelRobotInput', inputMsg.CModel_robot_input, timeout = None)
+    #gripper_position = msg.gPO 
+    gripper_position = 255 #TEMP DEBUG
+    
+    #Robotiq.get_current_gripper_status(Robotiq())
+    #Robotiq.goto(robotiq_client, pos=object_thickness, speed=config['gripper_speed'], force=config['gripper_force'], block=False) 
+        
+
+    # gripper kinematics
+    opening_at_zero = config['max_opening']-2*config['finger_thickness']
+    gripper_opening = -config['opening_per_count']*gripper_position + opening_at_zero
+
+    contact_B_e = [config['tcp2fingertip']-fingertip2contactB, -gripper_opening/2.0, 0, 1]  
+    contact_B_w = np.matmul(T_we, contact_B_e) 
+    dynamixel.set_length(tuck)
+    tilt.translate_tilt(contact_B_w[:3], axis, angle, velocity, 0.003)
 
 if __name__ == '__main__':
     try:

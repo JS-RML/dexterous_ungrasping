@@ -114,5 +114,8 @@ The three primitive operations navigate the configuration space as follows:
 <img src="files/tilt.jpg" width="250">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="files/regrasp.jpg" width="250">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="files/tuck.jpg" width="250">
 </p>
 
-## 6. Maintenance 
+## 6. License 
+The source code is released under MIT license. 
+
+## 7. Maintenance 
 For any technical issues, please contact John Kim [chkimaa@connect.ust.hk](). 
