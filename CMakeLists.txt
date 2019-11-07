@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  geometry_msgs
   message_generation
   cv_bridge
 )
@@ -51,16 +52,19 @@ find_package(OpenCV 3.3.1 EXACT REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
+ add_message_files(
+   FILES
+   Aruco.msg
+   Aruco_array.msg
 #   Message1.msg
 #   Message2.msg
-# )
+ )
 
 ## Generate services in the 'srv' folder
  add_service_files(
    FILES
    getCharucoPose.srv
+   getArucoPose.srv
  )
 
 ## Generate actions in the 'action' folder
@@ -74,6 +78,7 @@ find_package(OpenCV 3.3.1 EXACT REQUIRED)
  generate_messages(
    DEPENDENCIES
    std_msgs
+   geometry_msgs
  )
 
 ################################################
@@ -214,5 +219,13 @@ add_dependencies(CharucoPose_publisher shallow_depth_insertion_gencpp)
 add_executable(camera_calibration src/camera_calibration.cpp)
 target_link_libraries(camera_calibration ${catkin_LIBRARIES} ${OpenCV_LIBS})
 add_dependencies(camera_calibration shallow_depth_insertion_gencpp)
+
+add_executable(getArucoPose_server src/getArucoPose_server.cpp)
+target_link_libraries(getArucoPose_server ${catkin_LIBRARIES} ${OpenCV_LIBS})
+add_dependencies(getArucoPose_server shallow_depth_insertion_gencpp)
+
+add_executable(ArucoPose_publisher src/ArucoPose_publisher.cpp)
+target_link_libraries(ArucoPose_publisher ${catkin_LIBRARIES} ${OpenCV_LIBS})
+add_dependencies(ArucoPose_publisher shallow_depth_insertion_gencpp)
 
 
