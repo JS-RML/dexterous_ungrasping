@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   message_generation
   cv_bridge
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -111,7 +112,7 @@ find_package(OpenCV 3.3.1 EXACT REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
+  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime tf
 #  INCLUDE_DIRS include
 #  LIBRARIES shallow_depth_insertion
 #  CATKIN_DEPENDS roscpp rospy std_msgs
@@ -228,4 +229,7 @@ add_executable(ArucoPose_publisher src/ArucoPose_publisher.cpp)
 target_link_libraries(ArucoPose_publisher ${catkin_LIBRARIES} ${OpenCV_LIBS})
 add_dependencies(ArucoPose_publisher shallow_depth_insertion_gencpp)
 
+add_executable(ArucoTF_broadcaster src/ArucoTF_broadcaster.cpp)
+target_link_libraries(ArucoTF_broadcaster ${catkin_LIBRARIES} ${OpenCV_LIBS})
+add_dependencies(ArucoTF_broadcaster shallow_depth_insertion_gencpp)
 

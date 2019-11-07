@@ -81,13 +81,12 @@ static bool readCharucoParameters(std::string filename, int &squaresX, int &squa
     return true;
 }
 
-
 // Service callback function: detect id tag and return tag pose 
 bool getArucoPose(ros::Publisher pub)
 {
   int squaresX, squaresY;
   float squareLength, markerLength;
-  readCharucoParameters("src/shallow_depth_insertion/config/charuco_param.yaml", squaresX, squaresY, squareLength, markerLength);
+  readCharucoParameters("/home/john/catkin_ws/src/shallow_depth_insertion/config/charuco_param.yaml", squaresX, squaresY, squareLength, markerLength);
   
   int dictionaryId = 0;
   bool showRejected = 0; 
@@ -95,7 +94,7 @@ bool getArucoPose(ros::Publisher pub)
 
   // Read detector parameters from config/yaml
   cv::Ptr<cv::aruco::DetectorParameters> detectorParams = cv::aruco::DetectorParameters::create();
-  bool readOk = readDetectorParameters("src/shallow_depth_insertion/config/detector_params.yaml", detectorParams);
+  bool readOk = readDetectorParameters("/home/john/catkin_ws/src/shallow_depth_insertion/config/detector_params.yaml", detectorParams);
   if(!readOk) {
     std::cerr << "Invalid detector parameters file" << std::endl;
     return 0;
@@ -108,7 +107,7 @@ bool getArucoPose(ros::Publisher pub)
   // Read camera parameters from config/yaml
   cv::Mat camMatrix, distCoeffs;
   if(estimatePose) {
-    bool readOk = readCameraParameters("src/shallow_depth_insertion/config/camera_param.yaml", camMatrix, distCoeffs);
+    bool readOk = readCameraParameters("/home/john/catkin_ws/src/shallow_depth_insertion/config/camera_param.yaml", camMatrix, distCoeffs);
     if(!readOk) {
       std::cerr << "Invalid camera file" << std::endl;
       return 0;
