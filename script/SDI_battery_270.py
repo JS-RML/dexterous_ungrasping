@@ -14,7 +14,7 @@ import tilt
 import regrasp
 import tuck
 import visualization
-
+import dynamixel
 
 from robotiq_2f_gripper_msgs.msg import CommandRobotiqGripperFeedback, CommandRobotiqGripperResult, CommandRobotiqGripperAction, CommandRobotiqGripperGoal
 from robotiq_2f_gripper_control.robotiq_2f_gripper_driver import Robotiq2FingerGripperDriver as Robotiq
@@ -52,64 +52,80 @@ if __name__ == '__main__':
         # Set TCP speed     
         group.set_max_velocity_scaling_factor(tcp_speed)
         
-        pre_pick_pose = [-0.078, 0.592, 0.416, 0.7071, -0.0, -0.7071, 0.0]
-        pick_pose = [-0.078, 0.592, 0.342, 0.7071, -0.0, -0.7071, 0.0]
         init_pose=[-0.344, 0.538, 0.458, -0.7071, -0.0, 0.7071, 0.0]
-        regrasp_pose=[-0.344, 0.538, 0.342, -0.7071, -0.0, 0.7071, 0.0]
-        
-        Robotiq.goto(robotiq_client, pos=0.04, speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
+        prepick_pose=[-0.2613, 0.6531, 0.3442, -0.7071, -0.0, 0.7071, 0.0]
+        pick_pose=[-0.2613, 0.6531, 0.2924, -0.7071, -0.0, 0.7071, 0.0]
+        tilt_pose=[-0.341, 0.413, 0.359, -0.653, -0.271, 0.653, 0.271]
+        prior_pose=[-0.436, 0.427, 0.360, -0.653, -0.271, 0.653, 0.271]
+        initial_pose=[-0.432, 0.407, 0.576, -0.653, -0.271, 0.653, 0.271]
+        regrasp_pose=[-0.432, 0.462, 0.544, -0.653, -0.271, 0.653, 0.271]
+        dynamixel.set_length(120)
+        #Robotiq.goto(robotiq_client, pos=object_thickness+0.015, speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
+        #rospy.sleep(0.5)
+        #motion_primitives.set_pose(init_pose)
+        #motion_primitives.set_pose(prepick_pose)
+        #motion_primitives.set_pose(pick_pose)
+        Robotiq.goto(robotiq_client, pos=object_thickness+0.002, speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
         rospy.sleep(0.5)
-        motion_primitives.set_pose(pre_pick_pose)
-        motion_primitives.set_pose(pick_pose)
-        Robotiq.goto(robotiq_client, pos=object_thickness+0.004, speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
-        rospy.sleep(0.5)
-        motion_primitives.set_pose(pre_pick_pose)
+        #motion_primitives.set_pose(prepick_pose)
+        #motion_primitives.set_pose(tilt_pose)
+        #motion_primitives.set_pose(prior_pose)
+        motion_primitives.set_pose(initial_pose)
+        rospy.sleep(7)
         motion_primitives.set_pose(regrasp_pose)
         
+        
         # read position from real robot. 
-
         p = group.get_current_pose().pose
         trans_tool0 = [p.position.x, p.position.y, p.position.z]
         rot_tool0 = [p.orientation.x, p.orientation.y, p.orientation.z, p.orientation.w] 
         T_wg = tf.TransformerROS().fromTranslationRotation(trans_tool0, rot_tool0)
-        P_g_center = [tcp2fingertip+object_length-delta_0, 0, 0, 1]
+        P_g_center = [tcp2fingertip+object_length-delta_0, -object_thickness/2, 0, 1]
         P_w_center = np.matmul(T_wg, P_g_center)
-        center = [P_w_center[0], P_w_center[1], P_w_center[2]]
+        center = P_w_center[:3]
         
-        # Tilt
-        tilt.tilt(center, axis, int(90-theta_0), tcp_speed)
-        rospy.sleep(0.5)
+        # Visualize object during regrasp
+        P_g_center_viz = [tcp2fingertip+object_length-delta_0, 0, 0, 1]
+        P_w_center_viz = np.matmul(T_wg, P_g_center_viz)
+        center_viz = P_w_center_viz[:3]
+        p = group.get_current_pose().pose
+        object_v = [center_viz[0]-p.position.x, center_viz[1]-p.position.y, center_viz[2]-p.position.z]
+        object_uv = object_v / np.sum(np.power(object_v,2))**0.5
+        object_edge = np.multiply(object_uv, object_length)
+        visualization.thin_object(center_viz, np.subtract(center_viz, object_edge), object_thickness, 3)
+        visualization.visualizer(np.subtract(center_viz, object_edge), 1, 0.01, 4)
+
         # Regrasp
-        regrasp.regrasp(np.multiply(axis, -1), int(psi_regrasp), tcp_speed)
         rospy.sleep(0.5)
+        regrasp.palm_regrasp(np.multiply(axis, -1), int(psi_regrasp), tcp_speed)
+        rospy.sleep(0.5)
+        
         # Tilt
         tilt.tilt(center, axis, int(theta_tilt), tcp_speed)
+        #dynamixel.set_length(148)
         rospy.sleep(0.5)
-        # Place
-        #tuck.rotate_place(np.multiply(axis, -1), int(tuck_angle), 0.035, tcp_speed)
-
-        p = group.get_current_pose().pose
-        trans_tool0 = [p.position.x, p.position.y, p.position.z]
-        rot_tool0 = [p.orientation.x, p.orientation.y, p.orientation.z, p.orientation.w] 
-        T_wg = tf.TransformerROS().fromTranslationRotation(trans_tool0, rot_tool0)
-        P_g_center = [tcp2fingertip-0.02, 0, 0, 1]
-        P_w_center = np.matmul(T_wg, P_g_center)
-        center = [P_w_center[0], P_w_center[1], P_w_center[2]]
-        tilt.tilt(center, np.multiply(axis, -1), int(tuck_angle), tcp_speed)
-        rospy.sleep(1)
         
-        motion_primitives.set_pose_relative([0,0,0.3])
-    
+        # Surface Slide
+        motion_primitives.set_pose_relative([0, 0, -0.011])
+        rospy.sleep(0.5)
+        
+        # Push-Tuck        
+        tuck.push_tuck2(np.multiply(axis, -1), int(tuck_angle), 0.01, tcp_speed, 146)
+        rospy.sleep(0.5)
+        
+        motion_primitives.set_pose_relative([0, 0, 0.01])
+        motion_primitives.set_pose_relative([0, -0.15, 0])
+        
         #rospy.spin()
         
     except rospy.ROSInterruptException: pass
         
 '''
 # Robot parameters 
-tcp_speed: 0.03
+tcp_speed: 0.05
 
 # Gripper parameters
-tcp2fingertip: 0.32 # distance from tcp to gripper fingertip
+tcp2fingertip: 0.275 # distance from tcp to gripper fingertip
 opening_per_count: 0.00065 # gripper stroke opening per rPr count
 finger_thickness: 0.005 
 max_opening: 0.1523 # max stroke of gripper excluding finger thickness
@@ -117,20 +133,20 @@ gripper_speed: 0.1 # value between 0.013 and 0.100
 gripper_force: 10 # value between 0 and 100
 
 # Object dimension
-object_thickness: 0.005 #0.01 # object thickness in meters
-object_length: 0.085 # object length in meters
+object_thickness: 0.014 #0.01 # object thickness in meters
+object_length: 0.049 # object length in meters
 
 # Initial configuration
-delta_0: 0.055 #0.0425 # distance from fingertip to object tip within gripper
+delta_0: 0.03 #0.0425 # distance from fingertip to object tip within gripper
 theta_0: 45.0
 
 # Intermediate configuration
-psi_regrasp: 35.0
-theta_tilt: 37
-tuck: 9
+psi_regrasp: 32.0
+theta_tilt: 20
+tuck: 18
 
 # Action axis
-axis: [1, 0, 0]
+axis: [-1, 0, 0]
 
 # Simulation
 sim: 0

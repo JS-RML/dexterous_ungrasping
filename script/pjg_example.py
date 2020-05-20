@@ -107,13 +107,14 @@ if __name__ == '__main__':
     robotiq_client.wait_for_result()
     '''
     # Use pre-defined functions for robot gripper manipulation.
-    Robotiq.goto(robotiq_client, pos=200, speed=10, force=5 , block=True)
-    rospy.sleep(0.1)
-    Robotiq.goto(robotiq_client, pos=190, speed=20, force=5 , block=True)
-    rospy.sleep(0.1)
-    Robotiq.goto(robotiq_client, pos=180, speed=100, force=5 , block=True)
-    rospy.sleep(0.1)
-    Robotiq.goto(robotiq_client, pos=170, speed=40, force=5 , block=True)
+    Robotiq.goto(robotiq_client, pos=0.04, speed=10, force=5 , block=True)
+    print "HI"
+    #rospy.sleep(0.1)
+    #Robotiq.goto(robotiq_client, pos=190, speed=20, force=5 , block=True)
+    #rospy.sleep(0.1)
+    #Robotiq.goto(robotiq_client, pos=180, speed=100, force=5 , block=True)
+    #rospy.sleep(0.1)
+    #Robotiq.goto(robotiq_client, pos=170, speed=40, force=5 , block=True)
 
 
           

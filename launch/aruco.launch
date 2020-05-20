@@ -1,5 +1,7 @@
 <launch>
-    <node pkg="tf" type="static_transform_publisher" name="eelink2camera" args="-0.0051 0.07277 -0.1265 0.705564 0.0008812 0.7075963 0.038551 ee_link camera  100"/>
+    <node pkg="tf" type="static_transform_publisher" name="eelink2camera" args="0.015616 0.11888 -0.063739 0.7141828 0.0545246 0.6955231 0.0567247 ee_link camera  100"/>
     <node name="aruco_pub" pkg="shallow_depth_insertion" type="ArucoPose_publisher" required="true" output="screen"/>
     <node name="aruco_tf" pkg="shallow_depth_insertion" type="ArucoTF_broadcaster" required="true" output="log" />
 </launch>
+
+

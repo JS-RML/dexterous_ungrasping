@@ -65,7 +65,7 @@ if __name__ == '__main__':
         
         # Tilt
         tilt.tilt(center, axis, int(90-theta_0), tcp_speed)
-        
+                
         # Visualize object during regrasp
         p = group.get_current_pose().pose
         object_v = [center[0]-p.position.x, center[1]-p.position.y, center[2]-p.position.z]
@@ -84,7 +84,7 @@ if __name__ == '__main__':
         
         # Tuck
         tuck.rotate_tuck(np.multiply(axis, -1), int(tuck_angle), 0.03, tcp_speed)
-        
+             
         rospy.spin()
         
         
