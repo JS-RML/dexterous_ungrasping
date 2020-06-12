@@ -123,7 +123,7 @@ def palm_regrasp(axis, angle, velocity):
     ori_initial = [pose_target.orientation.x, pose_target.orientation.y, pose_target.orientation.z, pose_target.orientation.w]
     T_we = tf.TransformListener().fromTranslationRotation(pos_initial, ori_initial) 
     tcp2fingertip = config['tcp2fingertip']   
-    contact_A_e = [tcp2fingertip, -config['object_thickness']/2, 0, 1] #TODO: depends on axis direction
+    contact_A_e = [tcp2fingertip, config['object_thickness']/2, 0, 1] #TODO: depends on axis direction
     contact_A_w = np.matmul(T_we, contact_A_e) 
 
     visualization.visualizer(contact_A_w[:3], "s", 0.01, 1) #DEBUG
@@ -174,7 +174,7 @@ def palm_regrasp(axis, angle, velocity):
             #print "CASE 1"
         #Normal Case
         elif axis[0] < 0:
-            pose_target.position.y = contact_A_w[1] - hori
+            pose_target.position.y = contact_A_w[1] - hori #(- +) ( + + ) ( + -)
             pose_target.position.z = contact_A_w[2] + verti
             #print "CASE 2"
         elif axis[1] > 0:
@@ -210,12 +210,13 @@ def palm_regrasp(axis, angle, velocity):
         d = config['object_thickness'] * math.sin(math.radians(psi))
         opposite = a - d
         width = b + c
-        palm_position = 138 + 1.2*(config['delta_0'] - a)*1000
+        palm_position = 128 + 1.2*(config['delta_0'] - a)*1000
         #pos = int((opening_at_zero - width)/config['opening_per_count'])
-        Robotiq.goto(robotiq_client, pos=width-0.002, speed=config['gripper_speed'], force=config['gripper_force'], block=False) 
+        Robotiq.goto(robotiq_client, pos=width+0.005, speed=config['gripper_speed'], force=config['gripper_force'], block=False) 
         print palm_position
         dynamixel.set_length(palm_position)
         psi = round(psi, 2)
+        rospy.sleep(0.5) 
        
 def inverted_palm_regrasp(axis, angle, velocity):
     with open("/home/john/catkin_ws/src/shallow_depth_insertion/config/sdi_config.yaml", 'r') as stream:

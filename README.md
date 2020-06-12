@@ -1,10 +1,15 @@
-# Shallow-Depth Insertion
+# Shallow-Depth Insertion (Dexterous Ungrasping)
 
 ## 1. Overview
 
 This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel robotic manipulation technique suitable for assembling thin peg-like objects into a hole with a shallow depth, as can be seen in a cell phone battery insertion for example. Our technique features dexterous manipulation actions that combine into a complete insertion operation as seen in the animations below. This package is directly applicable to a simple hardware setting with the conventional parallel-jaw gripper installed on an industrial robot arm.
 
+**Note:** This package is also used for implementing **Dexterous Ungrasping**, which refers to the task of securely transferring an object from the gripper to the environment through dexterous manipulation, like the way players would place stones in the game of Go. Dexterous ungrasping is generalized from shallow-depth insertion, as it addresses the task of placement, which is more difficult than insertion.    
+
 **Published Article**
+
+- C. H. Kim and J. Seo, "[Dexerous Ungrasping: Methods and Designs for Secure Placement and insertion through Dexterous Manpulation]()," submitted to *IEEE Transactions on Robotics* (Under review). 
+
 - C. H. Kim and J. Seo, "[Shallow-Depth Insertion: Peg in Shallow Hole Through Robotic In-Hand Manipulation](https://ieeexplore.ieee.org/document/8598749)," in *IEEE Robotics and Automation Letters*, vol. 4, no. 2, pp. 383-390, April 2019.
 
     *If you use shallow-depth insertion for your application or research, please star this repo and cite our related paper.* [(BibTeX)](files/BibTeX.txt)
@@ -14,7 +19,9 @@ This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel 
 <img src="files/lego.gif" width="360" height="202"> <img src="files/battery.gif" width="360" height="202">
 </p>
 
-**Video Link:** [SDI](https://www.youtube.com/watch?v=Nka-sCzrcSs)
+**Video Link:** 
+1. [Shallow-Depth Insertion](https://www.youtube.com/watch?v=Nka-sCzrcSs)
+2. [Dexterous Ungrasping]()
 
 **Contributers**: [Chung Hee Kim](https://sites.google.com/view/chjohnkim/home), [Jungwon Seo](http://junseo.people.ust.hk/)  
 
@@ -25,7 +32,8 @@ This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel 
 
 - [**Robotiq 2F-140**](https://robotiq.com/products/2f85-140-adaptive-robot-gripper) Adaptive Parallel Jaw Gripper
 - [**Robotiq FT300**](https://robotiq.com/products/ft-300-force-torque-sensor) Force Torque Sensor
-- **Optional**: Webcam
+- **Webcam**
+- **Optional**: [**Extendable Palm Device**](https://github.com/HKUST-RML/extendable_palm_device) for implementation of immobilized insertion
 
 <p align = "center">
 <img src="files/exp_setting.png" width="400">
@@ -37,7 +45,7 @@ This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel 
 - [**ur_modern_driver**](https://github.com/ros-industrial/ur_modern_driver): ROS driver for UR10 robot controller from Universal Robots
 - [**universal_robots**](http://wiki.ros.org/action/show/universal_robots?action=show&redirect=universal_robot): ROS-Industrial support for Univrsal Robots manipulators
 - [**robotiq_2finger_grippers**](https://github.com/chjohnkim/robotiq_2finger_grippers.git): ROS driver for Robotiq Adaptive Grippers
-- **Optional**: [**dynamixel_motor**](http://wiki.ros.org/dynamixel_motor): ROS interface with Robotis Dynamixel line of servo motors
+- **Optional**: [**dynamixel_motor**](http://wiki.ros.org/dynamixel_motor): ROS interface with Robotis Dynamixel line of servo motors to control the extendable palm device
 
 
 ## 3. Build on ROS
@@ -66,11 +74,6 @@ roslaunch shallow_depth_insertion ur10_robot.launch simulation:=false
 roslaunch shallow_depth_insertion gripper.launch
 rosrun shallow_depth_insertion SDI_main.py
 ```
-To control the extendable palm via dynamixel servos:
-```
-roslaunch shallow_depth_insertion dynamixel.launch
-rosrun shallow_depth insertion dynamixel.py
-```
 
 ### 4.3 Changing execution parameters
 The parameters of the SDI process can be specified in config/sdi_config.yaml.
@@ -92,7 +95,40 @@ The parameters are as follows:
     - ***theta_tilt***: Angle to tilt after regrasping
     - ***axis***: Axis and direction to rotate about using right-hand rule
 
-## 5. Background
+## 5. Dexterous Ungrasping
+
+### 5.1 Immobilized Insertion
+
+- Implementing immobilized insertion requires the use of the extendable palm device. Please refer to the instructions [here]() for setting up the device. Once the palm device is installed on the base gripper and the software prerequisites are satifised, you can control the extendable plam device via dyanmixal servos:  
+
+```
+roslaunch shallow_depth_insertion dynamixel.launch
+rosrun shallow_depth insertion dynamixel.py
+```
+
+- The following input commands can be used to control the extendable palm in the ```dynamixel.py``` executable:
+    - **e**: fully extend
+    - **c**: fully contract
+    - **f**: increase speed
+    - **s**: decrease speed
+    - integer between **115** and **152**: setting position of the extendable palm (unit in mm)
+
+- To execute battery insertion with palm assistance on the real robot: 
+
+```
+rosrun shallow_depth_insertion SDI_battery_main.py
+```
+
+### 5.2 Precision Placement
+
+- Precision placement can be executed in the same way shallow-depth insertion is executed. No additional hardware or software is required. For example, to execute precision placement of a coin on a real robot:
+
+```
+rosrun shallow_depth_insertion PP_coin.py
+```
+
+
+## 6. Background
 SDI is composed of three primitive operations: **tilt**, **regrasp**, and **tuck**. The three manipulation primitives are utilized to navigate the configuration space of the object-gripper-hole system, which is parameterized as follows:
 - ***θ*** : Angle formed between the object and the hole surface
 -  ***ψ*** : Angle formed between the object and the gripper upper finger
@@ -114,8 +150,8 @@ The three primitive operations navigate the configuration space as follows:
 <img src="files/tilt.jpg" width="250">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="files/regrasp.jpg" width="250">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="files/tuck.jpg" width="250">
 </p>
 
-## 6. License 
+## 7. License 
 The source code is released under MIT license. 
 
-## 7. Maintenance 
+## 8. Maintenance 
 For any technical issues, please contact John Kim [chkimaa@connect.ust.hk](). 

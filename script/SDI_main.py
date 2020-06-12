@@ -13,7 +13,7 @@ import actionlib
 import tilt
 import regrasp
 import tuck
-import visualization
+#import visualization
 
 
 from robotiq_2f_gripper_msgs.msg import CommandRobotiqGripperFeedback, CommandRobotiqGripperResult, CommandRobotiqGripperAction, CommandRobotiqGripperGoal
@@ -49,6 +49,10 @@ if __name__ == '__main__':
         sim = config['sim']
         table_height_wrt_world = -0.02
 
+        pose = [-0.3, 0.630, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
+        motion_primitives.set_pose(pose)
+
+
         # read position from real robot. 
         p = group.get_current_pose().pose
         trans_tool0 = [p.position.x, p.position.y, p.position.z]
@@ -60,13 +64,6 @@ if __name__ == '__main__':
         # Set TCP speed     
         group.set_max_velocity_scaling_factor(tcp_speed)
         
-        Robotiq.goto(robotiq_client, pos=0, speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
-        # Tilt
-        tilt.tilt(center, axis, int(90-theta_0), tcp_speed)
-        
-
-
-        '''
         # Set gripper position
         Robotiq.goto(robotiq_client, pos=object_thickness+0.005, speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
         
@@ -83,7 +80,39 @@ if __name__ == '__main__':
         
         # Tuck
         tuck.rotate_tuck(np.multiply(axis, -1), int(tuck_angle), 0.03, tcp_speed)
-        '''
+        
         #rospy.spin()
         
     except rospy.ROSInterruptException: pass
+
+'''
+# Robot parameters 
+tcp_speed: 0.12
+
+# Gripper parameters
+tcp2fingertip: 0.275 # distance from tcp to gripper fingertip
+opening_per_count: 0.00065 # gripper stroke opening per rPr count
+finger_thickness: 0.005 
+max_opening: 0.1523 # max stroke of gripper excluding finger thickness
+gripper_speed: 0.1 # value between 0.013 and 0.100
+gripper_force: 10 # value between 0 and 100
+
+# Object dimension
+object_thickness: 0.005 #0.01 # object thickness in meters
+object_length: 0.1 # object length in meters
+
+# Initial configuration
+delta_0: 0.04 #0.0425 # distance from fingertip to object tip within gripper
+theta_0: 45.0
+
+# Intermediate configuration
+psi_regrasp: 89.0
+theta_tilt: 40
+tuck: 5
+
+# Action axis
+axis: [1, 0, 0]
+
+# Simulation
+sim: 0
+'''

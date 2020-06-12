@@ -39,7 +39,7 @@ def set_pose(pose):
     plan = group.plan() 
     group.go(wait=True) 
 
-def set_joint(joint):
+def set_joint_degrees(joint):
     '''Set robot joint.  
 
     Parameters:
@@ -54,6 +54,25 @@ def set_joint(joint):
     j[3] = math.radians(joint[3])
     j[4] = math.radians(joint[4])
     j[5] = math.radians(joint[5])
+    group.set_joint_value_target(j)
+    plan = group.plan() 
+    group.go(wait=True)
+
+def set_joint_radians(joint):
+    '''Set robot joint.  
+
+    Parameters:
+        joint (list): robot joints in degrees
+    Returns:
+    
+    '''
+    j = group.get_current_joint_values() 
+    j[0] = joint[0]
+    j[1] = joint[1]
+    j[2] = joint[2]
+    j[3] = joint[3]
+    j[4] = joint[4]
+    j[5] = joint[5]
     group.set_joint_value_target(j)
     plan = group.plan() 
     group.go(wait=True)
