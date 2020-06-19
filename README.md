@@ -6,6 +6,25 @@ This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel 
 
 **Note:** This package is also used for implementing **Dexterous Ungrasping**, which refers to the task of securely transferring an object from the gripper to the environment through dexterous manipulation, like the way players would place stones in the game of Go. Dexterous ungrasping is generalized from shallow-depth insertion, as it addresses the task of placement, which is more difficult than insertion.    
 
+### *Shallow-Depth Insertion* 
+<p align = "center">
+<img src="files/phone.gif" width="240" height="135"> 
+<img src="files/lego.gif" width="240" height="135"> 
+<img src="files/battery.gif" width="240" height="135">
+</p>
+
+### *Dexterous Ungrasping*
+<p align = "center">
+<img src="files/du_go.gif" width="240" height="135"> 
+<img src="files/du_card.gif" width="240" height="135"> 
+<img src="files/du_book.gif" width="240" height="135">
+</p>
+
+**Full Video Link:** 
+1. [Shallow-Depth Insertion](https://www.youtube.com/watch?v=Nka-sCzrcSs)
+2. [Dexterous Ungrasping](https://www.youtube.com/watch?v=KXN6uyKoGSU)
+
+
 **Published Article**
 
 - C. H. Kim and J. Seo, "[Dexerous Ungrasping: Methods and Designs for Secure Placement and insertion through Dexterous Manpulation]()," submitted to *IEEE Transactions on Robotics* (Under review). 
@@ -13,15 +32,6 @@ This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel 
 - C. H. Kim and J. Seo, "[Shallow-Depth Insertion: Peg in Shallow Hole Through Robotic In-Hand Manipulation](https://ieeexplore.ieee.org/document/8598749)," in *IEEE Robotics and Automation Letters*, vol. 4, no. 2, pp. 383-390, April 2019.
 
     *If you use shallow-depth insertion for your application or research, please star this repo and cite our related paper.* [(BibTeX)](files/BibTeX.txt)
-
-<p align = "center">
-<img src="files/card.gif" width="360" height="202"> <img src="files/phone.gif" width="360" height="202"> 
-<img src="files/lego.gif" width="360" height="202"> <img src="files/battery.gif" width="360" height="202">
-</p>
-
-**Video Link:** 
-1. [Shallow-Depth Insertion](https://www.youtube.com/watch?v=Nka-sCzrcSs)
-2. [Dexterous Ungrasping]()
 
 **Contributers**: [Chung Hee Kim](https://sites.google.com/view/chjohnkim/home), [Jungwon Seo](http://junseo.people.ust.hk/)  
 
