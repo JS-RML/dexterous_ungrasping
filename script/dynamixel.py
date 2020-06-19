@@ -64,7 +64,7 @@ def set_angle(position):
     extend_max = -2;
     contract_max = 1.5;
     goal_pos = position
-    rospy.loginfo('goal_pos: {0}' .format(goal_pos))
+    #rospy.loginfo('goal_pos: {0}' .format(goal_pos))
     #goal_pos = 1.5-(goal_pos/73.0)
     goal_pos = 0.031889*goal_pos-1.65
 	
@@ -73,7 +73,7 @@ def set_angle(position):
     if goal_pos > contract_max:
         goal_pos = contract_max
     pub.publish(Float64(goal_pos))
-    rospy.loginfo('goal_pos: {0}' .format(goal_pos))
+    #rospy.loginfo('goal_pos: {0}' .format(goal_pos))
 
 # Set extension length of linear actuator from a range of 45 to 152
 def set_length(L):
@@ -102,7 +102,7 @@ def get_Key(data):
         print("Emergency Stop")
     else:
         set_pos = int(user_command)
-        if set_pos <= 152 and set_pos >= 108:
+        if set_pos <= 152 and set_pos >= 115:
             set_length(set_pos)  
      
 ###___Initiate node; subscribe to topic; call callback function___###

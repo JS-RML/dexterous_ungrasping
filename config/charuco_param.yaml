@@ -4,7 +4,7 @@
 squaresX: 10
 squaresY: 3
 squareLength: 0.031
-markerLength: 0.023
+markerLength: 0.05
 
 #Calibration board charuco
 #squaresX: 7

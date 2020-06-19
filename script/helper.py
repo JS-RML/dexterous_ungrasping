@@ -61,6 +61,16 @@ def quaternion2axis_angle(q):
         z = q[2]/s
     return [x, y, z, angle]
 
+def hong_to_kong_transform(pose):
+    '''
+    transforms a pose in hongs frame to a pose in kongs frame
+    T_hk = [-0.01257, 1.65, 0.002]
+    '''
+    pose[0] = pose[0]+0.01257
+    pose[1] = pose[1]-1.65 
+    pose[2] = pose[2]-0.002
+    return pose
+
 
         
 

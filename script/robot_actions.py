@@ -1,121 +1,58 @@
 #!/usr/bin/env python
 import sys
 import math
+import time
 import rospy
 import copy
+import numpy as np
 import tf
-import numpy
-import moveit_commander 
-import moveit_msgs.msg
-import std_msgs.msg 
-import geometry_msgs.msg 
-import roslib; roslib.load_manifest('robotiq_c_model_control')
-from robotiq_c_model_control.msg import _CModel_robot_output as outputMsg
-from robotiq_c_model_control.msg import _CModel_robot_input  as inputMsg
-from apriltags_ros.msg import * 
-from geometry_msgs.msg import WrenchStamped
-from std_msgs.msg import *
-from rospy import init_node, is_shutdown
-from dynamixel_msgs.msg import JointState
-from dynamixel_controllers.srv import *
+import moveit_commander
+import helper
+import motion_primitives
+import yaml
+import actionlib
+import visualization
+import dynamixel 
 
-##___GLOBAL VARIABLES___###
-velocity = 0.02 #velocity scaling factor (0, 1.0] - Safe value for a real robot is ~0.05
-#Dynamixel
-goal_pos = float;
-goal_speed = 1.0;
-
-##___INITIALIZATION___###
-moveit_commander.roscpp_initialize(sys.argv) #initialize the moveit commander
-rospy.init_node('move_group_python_interface_tutorial', anonymous=True) #initialize the node 
-robot = moveit_commander.RobotCommander() #define the robot
-scene = moveit_commander.PlanningSceneInterface() #define the scene
-group = moveit_commander.MoveGroupCommander("manipulator") #define the planning group (from the moveit packet 'manipulator' planning group)
-display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path', moveit_msgs.msg.DisplayTrajectory) #publisher that publishes a plan to the topic
-pub = rospy.Publisher('CModelRobotOutput', outputMsg.CModel_robot_output)
-regrasp_pub = rospy.Publisher('regrasp_status', String, queue_size = 10)
-psi_pub = rospy.Publisher('psi_current', Float32, queue_size = 10)
-length_pub = rospy.Publisher('length_value', Float32, queue_size = 10)
-tf_listener = tf.TransformListener()
-tf_broadcaster = tf.TransformBroadcaster()
-
-dynamixel_pub = rospy.Publisher('tilt_controller/command', Float64, queue_size=10)
+from robotiq_2f_gripper_msgs.msg import CommandRobotiqGripperFeedback, CommandRobotiqGripperResult, CommandRobotiqGripperAction, CommandRobotiqGripperGoal
+from robotiq_2f_gripper_control.robotiq_2f_gripper_driver import Robotiq2FingerGripperDriver as Robotiq
 
 
+moveit_commander.roscpp_initialize(sys.argv)
+robot = moveit_commander.RobotCommander() 
+scene = moveit_commander.PlanningSceneInterface() 
+group = moveit_commander.MoveGroupCommander("manipulator") 
 
+#import std_msgs.msg 
+#import geometry_msgs.msg 
+#import roslib; roslib.load_manifest('robotiq_c_model_control')
+#from robotiq_c_model_control.msg import _CModel_robot_output as outputMsg
+#from robotiq_c_model_control.msg import _CModel_robot_input  as inputMsg
+#from apriltags_ros.msg import * 
+#from geometry_msgs.msg import WrenchStamped
+#from std_msgs.msg import *
+#from rospy import init_node, is_shutdown
 
-
-###___Pick-up Object___###
-## This function manipulates gripper and grabs object
-## distance is the distance to dive before gripping and velocity is the speed of the motion. It rises 10cm after grabbing object
-def pickup(command, distance, vel):
+def grab_object(distance):
+    action_name = rospy.get_param('~action_name', 'command_robotiq_action')
+    robotiq_client = actionlib.SimpleActionClient(action_name, CommandRobotiqGripperAction)
+    Robotiq.goto(robotiq_client, pos=object_thickness+0.015, speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
     rospy.sleep(0.5)
-    gposition(pub, command, 150) #increment gripper width
-    rospy.sleep(1)
-    
-
-    resolution = 0.05 #resolution is interpreted as 1/resolution = number of interpolated points in the path
-    pose_target = group.get_current_pose().pose
-    x_1 = pose_target.position.x
-    y_1 = pose_target.position.y
-    z_1 = pose_target.position.z
-    x_2 = x_1
-    y_2 = y_1
-    z_2 = z_1 + distance
-    direction_vector = [x_2-x_1, y_2-y_1, z_2-z_1]
-    pose_target = group.get_current_pose().pose #create a pose variable. The parameters can be seen from "$ rosmsg show Pose"
-    waypoints = []
-    waypoints.append(pose_target)
-    t = 0 # counter/increasing variabe for the parametric equation of straight line      
-    while t <= 1.01:
-        pose_target.position.x = x_1 + direction_vector[0]*t
-        pose_target.position.y = y_1 + direction_vector[1]*t
-        pose_target.position.z = z_1 + direction_vector[2]*t
-        t += resolution 
+    motion_primitives.set_pose_relative([0, 0, -distance])
+    Robotiq.goto(robotiq_client, pos=object_thickness+0.002, speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
+    rospy.sleep(0.5)
+    motion_primitives.set_pose_relative([0, 0, distance])
         
-        waypoints.append(copy.deepcopy(pose_target))
-         
-    del waypoints[:1]
-    
-    plan_execute_waypoints(waypoints)
 
-    command = outputMsg.CModel_robot_output();
-    command.rACT = 1
-    command.rGTO = 1
-    command.rSP  = 20
-    command.rFR  = 150						##force need to be adjusted later
-    command.rPR = 220
-    pub.publish(command)
-    rospy.sleep(1)
-
-    
-    pose_target = group.get_current_pose().pose
-    x_1 = pose_target.position.x
-    y_1 = pose_target.position.y
-    z_1 = pose_target.position.z
-   
-    x_2 = x_1
-    y_2 = y_1
-    z_2 = z_1 + 0.1
-    direction_vector = [x_2-x_1, y_2-y_1, z_2-z_1]
-    pose_target = group.get_current_pose().pose #create a pose variable. The parameters can be seen from "$ rosmsg show Pose"
-    waypoints = []
-    waypoints.append(pose_target)
-    t = 0 # counter/increasing variabe for the parametric equation of straight line      
-    while t <= 1.01:
-        pose_target.position.x = x_1 + direction_vector[0]*t
-        pose_target.position.y = y_1 + direction_vector[1]*t
-        pose_target.position.z = z_1 + direction_vector[2]*t
-        t += resolution 
+def goto_aruco(tag_id, offset_x, offset_y, offset_z):
+    tf_listener = tf.TransformListener()
+    tag_frame_name = 'tag_'+str(tag_id)
+    tf_listener.waitForTransform('/world', tag_frame_name, rospy.Time(), rospy.Duration(4.0))
+    (trans_tag, rot_tag) = tf_listener.lookupTransform('/world', tag_frame_name, rospy.Time(0)) 
+    motion_primitives.set_pose([trans_tag[0]+offset_x, trans_tag[1]+offset_y, trans_tag[2]+offset_z, -0.7071, -0.0, 0.7071, 0.0])
         
-        waypoints.append(copy.deepcopy(pose_target))
-         
-    del waypoints[:1]
-    
-    plan_execute_waypoints(waypoints)
-
-
-
+    print trans_tag, rot_tag
+      
 #############################################################################################################################################################################################################
 ####____SENSING____####
 #############################################################################################################################################################################################################
@@ -393,47 +330,18 @@ def track_apriltag(tag_id, tag_frame_name, offset_x, offset_y, offset_z):
     else:
         print tag_frame_name, ' not found.'  
   
-
-
-
-
-
-
-
-   
 def plan_execute_waypoints(waypoints):
     (plan3, fraction) = group.compute_cartesian_path(waypoints, 0.01, 0) #parameters(waypoints, resolution_1cm, jump_threshold)
     plan= group.retime_trajectory(robot.get_current_state(), plan3, velocity) #parameter that changes velocity
     group.execute(plan)
-
-def plan_execute_waypoints_linearpath(waypoints, vel):
-    (plan3, fraction) = group.compute_cartesian_path(waypoints, 0.01, 0) #parameters(waypoints, resolution_1cm, jump_threshold)
-    plan= group.retime_trajectory(robot.get_current_state(), plan3, vel) #parameter that changes velocity
-    group.execute(plan)
- 
-def plan_asyncExecute_waypoints(waypoints):
-    (plan3, fraction) = group.compute_cartesian_path(waypoints, 0.01, 0) #parameters(waypoints, resolution_1cm, jump_threshold)
-    plan= group.retime_trajectory(robot.get_current_state(), plan3, velocity) #parameter that changes velocity
-    group.execute(plan, wait = False)
-
-def regrasp_asyncExecute_waypoints(waypoints):
-    (plan3, fraction) = group.compute_cartesian_path(waypoints, 0.01, 0) #parameters(waypoints, resolution_1cm, jump_threshold)
-    plan= group.retime_trajectory(robot.get_current_state(), plan3, velocity) #parameter that changes velocity
-    group.execute(plan, wait = False)
 
 def forceseek_asyncExecute_waypoints(waypoints):
     (plan3, fraction) = group.compute_cartesian_path(waypoints, 0.01, 0) #parameters(waypoints, resolution_1cm, jump_threshold)
     plan= group.retime_trajectory(robot.get_current_state(), plan3, 0.002) #parameter that changes velocity
     group.execute(plan, wait = False)
 
-
-###___MAIN___###
 if __name__ == '__main__':
 
     try:
-        
-        manipulator_arm_control()
-        
-        moveit_commander.roscpp_shutdown() #shut down the moveit_commander
-
+        print "robot_actions"        
     except rospy.ROSInterruptException: pass
