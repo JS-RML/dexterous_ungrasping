@@ -35,7 +35,7 @@
         <link name="right_inner_finger_pad" />
     </group>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="gripper" parent_link="tool0" group="gripper" />
+    <end_effector name="gripper" parent_link="ee_link" group="gripper" /> <!--ee_link / tool_0-->
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
     <passive_joint name="left_inner_finger_joint" />
     <passive_joint name="left_inner_knuckle_joint" />

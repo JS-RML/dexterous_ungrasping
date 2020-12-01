@@ -8,6 +8,7 @@ finger_thickness: 0.005
 max_opening: 0.1523 # max stroke of gripper excluding finger thickness
 gripper_speed: 0.1 # value between 0.013 and 0.100
 gripper_force: 10 # value between 0 and 100
+gripper_offset: 0.007 #gripper postion offset for compensating the error
 
 # Object dimension
 object_thickness: 0.000 #0.01 # object thickness in meters

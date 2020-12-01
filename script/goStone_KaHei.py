@@ -7,16 +7,15 @@ import numpy as np
 import tf
 import moveit_commander
 import helper
-import globals as gbs #global variables 
-globals.init("sdi_config_sim.yaml") #initialize global variables
+import globals #global variables 
+globals.init("goStone_KaHei.yaml") #initialize global variables
 import motion_primitives
 import yaml
 import actionlib
 import tilt
 import regrasp
 import tuck
-import visualization
-
+#import visualization
 
 from robotiq_2f_gripper_msgs.msg import CommandRobotiqGripperFeedback, CommandRobotiqGripperResult, CommandRobotiqGripperAction, CommandRobotiqGripperGoal
 from robotiq_2f_gripper_control.robotiq_2f_gripper_driver import Robotiq2FingerGripperDriver as Robotiq
@@ -32,55 +31,63 @@ scene = moveit_commander.PlanningSceneInterface()
 group = moveit_commander.MoveGroupCommander("manipulator") 
    
 if __name__ == '__main__':
+    with open(globals.config_path, 'r') as stream:
+        try:
+            config = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
     try:
-        tcp_speed = gbs.config['tcp_speed']
-        theta_0 = gbs.config['theta_0']
-        delta_0 = gbs.config['delta_0']
-        psi_regrasp = gbs.config['psi_regrasp']
-        theta_tilt = gbs.config['theta_tilt']
-        tuck_angle = gbs.config['tuck']
-        axis =  gbs.config['axis']
-        object_thickness = gbs.config['object_thickness']
-        object_length = gbs.config['object_length']
-        tcp2fingertip = gbs.config['tcp2fingertip']
-        sim = gbs.config['sim']
-        table_height_wrt_world = -0.02
+        tcp_speed = config['tcp_speed']
+        theta_0 = config['theta_0']
+        delta_0 = config['delta_0']
+        psi_regrasp = config['psi_regrasp']
+        theta_tilt = config['theta_tilt']
+        tuck_angle = config['tuck']
+        tuck_dist = config['tuck_dist']
+        axis =  config['axis']
+        object_thickness = config['object_thickness']
+        object_length = config['object_length']
+        tcp2fingertip = config['tcp2fingertip']
+        table_height_wrt_world = 0.108-0.02 #box on table  #table: -0.02
 
-        # If simulation, set robot initial position;
-        pose = [-0.3, 0.630, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
+        print "init pose"
+        #pose = [-0.3, 0.630, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
+        pose = [0.5, -0.8, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
         motion_primitives.set_pose(pose)
-        
+
+        print "init gripper pos"
+        Robotiq.goto(robotiq_client, pos=object_thickness+config['gripper_offset'], speed=config['gripper_speed'], force=config['gripper_force'], block=False)   
+
+        raw_input()
+
+        # read position from real robot. 
+        p = group.get_current_pose().pose
+        trans_tool0 = [p.position.x, p.position.y, p.position.z]
+        rot_tool0 = [p.orientation.x, p.orientation.y, p.orientation.z, p.orientation.w] 
+        T_wg = tf.TransformerROS().fromTranslationRotation(trans_tool0, rot_tool0)
+        P_g_center = [tcp2fingertip+object_length-delta_0, -object_thickness, 0, 1] #point G wrt to tcp
+        P_w_center = np.matmul(T_wg, P_g_center) #point G in world frame
+        center = [P_w_center[0], P_w_center[1], P_w_center[2]]
+
         # Set TCP speed     
         group.set_max_velocity_scaling_factor(tcp_speed)
         
-        # Set gripper position
-        Robotiq.goto(robotiq_client, pos=object_thickness, speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)   
-        
-        center = [pose[0], pose[1], pose[2] - tcp2fingertip - object_length + delta_0]
-        visualization.visualizer(position=center, marker_type=1, scale=0.01, id=2)
-        
+        print "tilt"
         # Tilt
         tilt.tilt(center, axis, int(90-theta_0), tcp_speed)
-                
-        # Visualize object during regrasp
-        p = group.get_current_pose().pose
-        object_v = [center[0]-p.position.x, center[1]-p.position.y, center[2]-p.position.z]
-        object_uv = object_v / np.sum(np.power(object_v,2))**0.5
-        object_edge = np.multiply(object_uv, object_length)
-        visualization.thin_object(center, np.subtract(center, object_edge), object_thickness, 3)
-        visualization.visualizer(np.subtract(center, object_edge), 1, 0.01, 4)
-        
+        raw_input()
+        print "regrasp"
         # Regrasp
         regrasp.regrasp(np.multiply(axis, -1), int(psi_regrasp), tcp_speed)
-
+        print "tilt"
         # Tilt
+        center = [P_w_center[0], P_w_center[1], P_w_center[2]+0.01] #shift center
         tilt.tilt(center, axis, int(theta_tilt), tcp_speed)
-        
+        print "tuck"
         # Tuck
-        tuck.rotate_tuck(np.multiply(axis, -1), int(tuck_angle), 0.03, tcp_speed)
-             
+        tuck.rotate_tuck(np.multiply(axis, -1), int(tuck_angle), tuck_dist, tcp_speed)
+        print "finished"
         #rospy.spin()
-        
         
     except rospy.ROSInterruptException: pass
 

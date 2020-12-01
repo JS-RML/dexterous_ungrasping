@@ -5,18 +5,14 @@ import rospy
 import copy
 import moveit_commander 
 import yaml
+import globals as gbs
 
 moveit_commander.roscpp_initialize(sys.argv) #initialize the moveit commander
 robot = moveit_commander.RobotCommander() #define the robot
 scene = moveit_commander.PlanningSceneInterface() #define the scene
 group = moveit_commander.MoveGroupCommander("manipulator") #define the planning group (from the moveit packet 'manipulator' planning group)
 
-with open("/home/john/catkin_ws/src/shallow_depth_insertion/config/sdi_config.yaml", 'r') as stream:
-    try:
-        config = yaml.safe_load(stream)
-    except yaml.YAMLError as exc:
-        print(exc)
-tcp_speed = config['tcp_speed']
+tcp_speed = gbs.config['tcp_speed']
 group.set_max_velocity_scaling_factor(tcp_speed)
 
 def set_pose(pose):
@@ -112,7 +108,7 @@ def set_pose_relative(relative_position):
     plan = group.plan() 
     group.go(wait=True) 
 
-def linear_path(vector, velocity):
+def linear_path(vector, velocity, wait_robot):
     '''Set relative robot position via linear trajectory.  
 
     Parameters:
@@ -134,7 +130,7 @@ def linear_path(vector, velocity):
         waypoints.append(copy.deepcopy(pose_target))     
     (plan, fraction) = group.compute_cartesian_path(waypoints, 0.01, 0) 
     retimed_plan= group.retime_trajectory(robot.get_current_state(), plan, velocity) #parameter that changes velocity
-    group.execute(retimed_plan)
+    group.execute(retimed_plan, wait=wait_robot)
 
 if __name__ == '__main__':
     try:

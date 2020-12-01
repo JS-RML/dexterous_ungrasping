@@ -68,12 +68,24 @@
     <origin xyz="0 0 0"/>
   </joint>
 
+  <!--
   <link name="table">
     <visual>
       <geometry>
         <box size="1.8 2.4 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="-0.64 0.94 -0.05"/>
+      <material name="white"/>
+    </visual>
+  </link>
+  -->
+  <!--new table setup-->
+  <link name="table">
+    <visual>
+      <geometry>
+        <box size="1.8 1.2 0.1"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.08 -0.44 -0.05"/>
       <material name="white"/>
     </visual>
   </link>
@@ -84,4 +96,36 @@
     <origin xyz="0 0 -0.02"/>
   </joint>
 
+  <!--protection wall--> 
+  <link name="wall1">
+    <visual>
+      <geometry>
+        <box size="1.8 0.1 1.5"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.08 0.21 0.75"/>
+      <material name="white"/>
+    </visual>
+  </link>
+
+  <joint name="table_to_wall1" type="fixed">
+    <parent link="table"/>
+    <child link="wall1"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+
+  <link name="wall2">
+    <visual>
+      <geometry>
+        <box size="0.1 1.2 1.5"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0.87 -0.44 0.75"/>
+      <material name="white"/>
+    </visual>
+  </link>
+
+  <joint name="table_to_wall2" type="fixed">
+    <parent link="table"/>
+    <child link="wall2"/>
+    <origin xyz="0 0 0"/>
+  </joint>
 </robot>
