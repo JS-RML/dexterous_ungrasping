@@ -33,7 +33,7 @@ This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel 
 
     *If you use shallow-depth insertion for your application or research, please star this repo and cite our related paper.* [(BibTeX)](files/BibTeX.txt)
 
-**Contributers**: [Chung Hee Kim](https://sites.google.com/view/chjohnkim/home), [Jungwon Seo](http://junseo.people.ust.hk/)  
+**Contributers**: [Chung Hee Kim](https://sites.google.com/view/chjohnkim/home), Ka Hei Mak, and [Jungwon Seo](http://junseo.people.ust.hk/)  
 
 ## 2. Prerequisites
 
@@ -113,7 +113,7 @@ The parameters are as follows:
 
 ```
 roslaunch shallow_depth_insertion dynamixel.launch
-rosrun shallow_depth insertion dynamixel.py
+rosrun shallow_depth_insertion dynamixel.py
 ```
 
 - The following input commands can be used to control the extendable palm in the ```dynamixel.py``` executable:
@@ -164,4 +164,4 @@ The three primitive operations navigate the configuration space as follows:
 The source code is released under MIT license. 
 
 ## 8. Maintenance 
-For any technical issues, please contact John Kim [chkimaa@connect.ust.hk](). 
+For any technical issues, please contact John Kim [chkimaa@connect.ust.hk]() and Ka Hei Mak [khmakac@connect.ust.hk](). 
