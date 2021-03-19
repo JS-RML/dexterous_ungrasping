@@ -27,13 +27,13 @@ This package is an implementation of **Shallow-Depth Insertion (SDI)**: a novel 
 
 **Published Article**
 
-- C. H. Kim and J. Seo, "[Dexerous Ungrasping: Methods and Designs for Secure Placement and insertion through Dexterous Manpulation]()," submitted to *IEEE Transactions on Robotics* (Under review). 
+- C. H. Kim, K. H. Mak, and J. Seo, "[Dexerous Ungrasping: Methods and Designs for Secure Placement and insertion through Dexterous Manpulation]()," submitted to *IEEE Transactions on Robotics* (Under review). 
 
 - C. H. Kim and J. Seo, "[Shallow-Depth Insertion: Peg in Shallow Hole Through Robotic In-Hand Manipulation](https://ieeexplore.ieee.org/document/8598749)," in *IEEE Robotics and Automation Letters*, vol. 4, no. 2, pp. 383-390, April 2019.
 
     *If you use shallow-depth insertion for your application or research, please star this repo and cite our related paper.* [(BibTeX)](files/BibTeX.txt)
 
-**Contributers**: [Chung Hee Kim](https://sites.google.com/view/chjohnkim/home), [Jungwon Seo](http://junseo.people.ust.hk/)  
+**Contributers**: [Chung Hee Kim](https://sites.google.com/view/chjohnkim/home), [Ka Hei Mak](https://github.com/ansonmak), and [Jungwon Seo](http://junseo.people.ust.hk/)  
 
 ## 2. Prerequisites
 
@@ -164,4 +164,4 @@ The three primitive operations navigate the configuration space as follows:
 The source code is released under MIT license. 
 
 ## 8. Maintenance 
-For any technical issues, please contact John Kim [chkimaa@connect.ust.hk](). 
+For any technical issues, please contact John Kim [chkimaa@connect.ust.hk]() and Ka Hei Mak [khmakac@connect.ust.hk]().
