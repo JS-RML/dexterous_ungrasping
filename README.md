@@ -4,7 +4,7 @@
 
 This package is an implementation of **Dexterous Ungrasping**, which refers to the task of securely transferring an object from the gripper to the environment through dexterous manipulation, like the way players would place stones in the game of Go. Our technique features dexterous manipulation actions that combine into a complete ungrasping operation as seen in the animations below. Dexterous ungrasping is generalized from our previous work, shallow-depth insertion, for addressing the task of placement without the concavity at the environment, which is more difficult than insertion. This package is directly applicable to a simple hardware setting with the conventional parallel-jaw gripper installed on an industrial robot arm. 
 
-**Note:** This package is also for implementing **Shallow-Depth Insertion (SDI)**: a novel robotic manipulation technique suitable for assembling thin peg-like objects into a hole with a shallow depth, as can be seen in a cell phone battery insertion for example. 
+**Note:** This package is also used for implementing **Shallow-Depth Insertion (SDI)**: a novel robotic manipulation technique suitable for assembling thin peg-like objects into a hole with a shallow depth, as can be seen in a cell phone battery insertion for example. 
 
 ### *Shallow-Depth Insertion* 
 <p align = "center">
