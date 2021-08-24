@@ -27,7 +27,7 @@ This package is an implementation of **Dexterous Ungrasping**, which refers to t
 
 **Published Article**
 
-- C. H. Kim, K. H. Mak, and J. Seo, "[Dexterous Ungrasping: Planning, Control, and Design for Secure Placement and Insertion through Dexterous Manpulation]()," submitted to *SAGE Journals: The International Journal of Robotics Research (IJRR)* (Under review). 
+- K. H. Mak, C. H. Kim, and J. Seo, "[Robust Ungrasping through Dexterous Manipulation]()," submitted to *IEEE Robotics and Automation Letters* (Under review). 
 
 - C. H. Kim and J. Seo, "[Shallow-Depth Insertion: Peg in Shallow Hole Through Robotic In-Hand Manipulation](https://ieeexplore.ieee.org/document/8598749)," in *IEEE Robotics and Automation Letters*, vol. 4, no. 2, pp. 383-390, April 2019.
 
