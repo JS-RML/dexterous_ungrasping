@@ -4,25 +4,25 @@ tcp_speed: 0.05
 # Gripper parameters
 tcp2fingertip: 0.28 #0.275 # distance from tcp to gripper fingertip
 opening_per_count: 0.00065 # gripper stroke opening per rPr count
-finger_thickness: 0.013 #0.0072
+finger_thickness: 0.0072 #0.0072
 max_opening: 0.1523 # max stroke of gripper excluding finger thickness
 gripper_speed: 0.1 # value between 0.013 and 0.100
 gripper_force: 10 # value between 0 and 100
-gripper_offset: 0.013 #0.0075 #gripper postion offset for compensating the error
-
+gripper_offset: 0.0055 #0.0075 #gripper postion offset for compensating the error
+# finger:65, thumb: 65
 # Object dimension
-object_thickness: 0.007 #0.006 # object thickness in meters
-object_length: 0.1055 #0.073 object length in meters
+object_thickness: 0.003 #0.006 # object thickness in meters
+object_length: 0.027 #0.073 object length in meters
 
 # Initial configuration
-delta_0: 0.045 #0.05 distance from fingertip to object tip within gripper
-theta_0: 45.0 #Angle between object and hole prior to regrasping
+delta_0: 0.024 #delta A:0.8 #0.05 distance from fingertip to object tip within gripper
+theta_0: 65.0 #30 #Angle between object and hole prior to regrasping
 
 # Intermediate configuration
-psi_regrasp: 8.0 #55 #Angle between object and upper finger after regrasping
-theta_tilt: 15 #22 #Angle to tilt after regrasping
-tuck: 35
-tuck_dist: 0.01 #distance from fingertip to contact B before tuck
+psi_regrasp: 45 #42/46 #Angle between object and upper finger after regrasping
+theta_tilt: 52 #13 #Angle to tilt after regrasping
+tuck: 13
+tuck_dist: 0.0016 #distance from fingertip to contact B before tuck
 
 # Action axis
 axis: [-1, 0, 0]

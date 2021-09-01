@@ -113,7 +113,7 @@
     <origin xyz="0 0 0"/>
   </joint>
 
-  <link name="wall2">
+  <!-- <link name="wall2">
     <visual>
       <geometry>
         <box size="0.1 1.2 1.5"/>
@@ -127,5 +127,5 @@
     <parent link="table"/>
     <child link="wall2"/>
     <origin xyz="0 0 0"/>
-  </joint>
+  </joint> -->
 </robot>

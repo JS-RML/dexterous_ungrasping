@@ -208,7 +208,7 @@ def translate_tilt(point, axis, angle, velocity, translate_distance):
     for t in range(1, angle+1):
         circle = np.add(center, radius*(math.cos(math.radians(t)))*v1 + radius*(math.sin(math.radians(t)))*v2)
         pose_target.position.x = circle[0]
-        pose_target.position.y = circle[1]#+(t/angle)*translate_distance
+        pose_target.position.y = circle[1]+(t/angle)*translate_distance
         pose_target.position.z = circle[2]-(t/angle)*translate_distance
         pose_target.orientation.x = ori_waypoints[t-1][0]
         pose_target.orientation.y = ori_waypoints[t-1][1]

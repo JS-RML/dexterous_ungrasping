@@ -102,7 +102,7 @@ def get_Key(data):
         print("Emergency Stop")
     else:
         set_pos = int(user_command)
-        if set_pos <= 152 and set_pos >= 115:
+        if set_pos <= 152 and set_pos >= 45: #115
             set_length(set_pos)  
      
 ###___Initiate node; subscribe to topic; call callback function___###

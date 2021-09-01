@@ -8,13 +8,14 @@ import tf
 import moveit_commander
 import helper
 import globals as gbs #global variables 
-gbs.init("slide_test.yaml") #load config as global variables
+gbs.init("gen_release_noPalm.yaml") #load config as global variables
 import motion_primitives
 import yaml
 import actionlib
 import tilt
 import regrasp
 import tuck
+import dynamixel
 #import visualization
 
 from robotiq_2f_gripper_msgs.msg import CommandRobotiqGripperFeedback, CommandRobotiqGripperResult, CommandRobotiqGripperAction, CommandRobotiqGripperGoal
@@ -46,15 +47,24 @@ if __name__ == '__main__':
         object_thickness = gbs.config['object_thickness']
         object_length = gbs.config['object_length']
         tcp2fingertip = gbs.config['tcp2fingertip']
-        table_height_wrt_world = 0.111-0.02 # with black carton:0.114-0.02 #box on table:0.111-0.02  #table: -0.02
+        table_height_wrt_world = 0.01-0.02 # black carton on aluminium 0.04-0.02 with black carton:0.114-0.02 #box on table:0.111-0.02  #table: -0.02
 
         print "init pose"
         #pose = [-0.3, 0.630, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
-        pose = [0.5, -0.8, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
+        pose = [0.603, -0.89, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
+        #0.603, -0.797
         motion_primitives.set_pose(pose)
 
+        # print "extend palm"
+        # dynamixel.set_position(230)
+
         print "init gripper position"
-        Robotiq.goto(robotiq_client, pos=0.10, speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)
+        Robotiq.goto(robotiq_client, pos=0.025, speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)
+
+        # raw_input()
+
+        print "init palm"
+        dynamixel.set_length(100) #115
 
         raw_input()
 
@@ -62,6 +72,12 @@ if __name__ == '__main__':
         Robotiq.goto(robotiq_client, pos=object_thickness+gbs.config['gripper_offset'], speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)   
 
         raw_input()
+
+        print "move up"
+        motion_primitives.set_pose_relative([0, 0, 0.05])
+        raw_input()
+        motion_primitives.set_pose_relative([0, 0.15, 0]) #0.25
+
 
         # read position from real robot. 
         p = group.get_current_pose().pose
@@ -77,25 +93,43 @@ if __name__ == '__main__':
         
         print "tilt"
         tilt.tilt(center, axis, int(90-theta_0), tcp_speed)
+
+        raw_input()
+
+        print "move down"
+        motion_primitives.set_pose_relative([0, 0, -0.045])
         raw_input()
 
         # print "regrasp"
         # width = regrasp.regrasp(np.multiply(axis, -1), int(psi_regrasp), 0.01)
         # raw_input()
 
-        # print "slide_release"
-        # regrasp.slide_release(np.multiply(axis, -1), 0.055, width, 0.005)
-        # raw_input()
+        Robotiq.goto(robotiq_client, pos=object_thickness+0.009, speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)
 
         print "generalized release"
-        regrasp.generalized_release(np.multiply(axis, -1),30,0.04,0.03)
+        width = regrasp.generalized_release(np.multiply(axis, -1),20,0.027,0.02) #20,0.035
         raw_input()
+
+        center = [P_w_center[0], P_w_center[1]+0.02, P_w_center[2]-0.045+0.000] 
 
         print "tilt"
         tilt.tilt(center, axis, int(theta_tilt), tcp_speed)
+        raw_input()
 
         print "tuck"
+        # motion_primitives.set_pose_relative([0, 0.003, 0.00])
+        # Robotiq.goto(robotiq_client, pos=width*1.4, speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)
         tuck.rotate_tuck(np.multiply(axis, -1), int(tuck_angle), tuck_dist, tcp_speed)
+        # motion_primitives.set_pose_relative([0, 0.008, 0.00])
+        # Robotiq.goto(robotiq_client, pos=width*1.1, speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)
+        # tuck.push_tuck(np.multiply(axis, -1), int(tuck_angle), 0.01, tcp_speed, 135)
+        # Robotiq.goto(robotiq_client, pos=width*1.215, speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)
+        # raw_input()
+        # tuck.push_tuck2(np.multiply(axis, -1), int(tuck_angle), 0.001, tcp_speed, 130) #135
+        # regrasp.second_regrasp(np.multiply(axis, -1),25, 0.01, tcp_speed)
+        #regrasp.regrasp(np.multiply(axis, -1), 15, tcp_speed)
+        motion_primitives.set_pose_relative([0, 0, 0.05])
+
         print "finished"
         #rospy.spin()
         

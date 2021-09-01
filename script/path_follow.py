@@ -8,7 +8,7 @@ import tf
 import moveit_commander
 import helper
 import globals as gbs #global variables 
-gbs.init("slide_test.yaml") #load config as global variables
+gbs.init("path_follow.yaml") #load config as global variables
 import motion_primitives
 import yaml
 import actionlib
@@ -46,11 +46,11 @@ if __name__ == '__main__':
         object_thickness = gbs.config['object_thickness']
         object_length = gbs.config['object_length']
         tcp2fingertip = gbs.config['tcp2fingertip']
-        table_height_wrt_world = 0.111-0.02 # with black carton:0.114-0.02 #box on table:0.111-0.02  #table: -0.02
+        table_height_wrt_world = 0.04-0.02 # black carton on aluminium 0.037-0.02 with black carton:0.114-0.02 #box on table:0.111-0.02  #table: -0.02
 
         print "init pose"
         #pose = [-0.3, 0.630, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
-        pose = [0.5, -0.8, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
+        pose = [0.5, -0.6, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
         motion_primitives.set_pose(pose)
 
         print "init gripper position"
@@ -62,6 +62,9 @@ if __name__ == '__main__':
         Robotiq.goto(robotiq_client, pos=object_thickness+gbs.config['gripper_offset'], speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)   
 
         raw_input()
+
+        print "move up"
+        motion_primitives.set_pose_relative([0, 0, 0.01])
 
         # read position from real robot. 
         p = group.get_current_pose().pose
@@ -79,6 +82,10 @@ if __name__ == '__main__':
         tilt.tilt(center, axis, int(90-theta_0), tcp_speed)
         raw_input()
 
+        print "move down"
+        motion_primitives.set_pose_relative([0, 0, -0.009])
+        raw_input()
+
         # print "regrasp"
         # width = regrasp.regrasp(np.multiply(axis, -1), int(psi_regrasp), 0.01)
         # raw_input()
@@ -88,8 +95,10 @@ if __name__ == '__main__':
         # raw_input()
 
         print "generalized release"
-        regrasp.generalized_release(np.multiply(axis, -1),30,0.04,0.03)
+        regrasp.generalized_release(np.multiply(axis, -1),15,0.026,0.03) #39 0.012
         raw_input()
+
+        center = [P_w_center[0], P_w_center[1]+0.00, P_w_center[2]-0.005]
 
         print "tilt"
         tilt.tilt(center, axis, int(theta_tilt), tcp_speed)

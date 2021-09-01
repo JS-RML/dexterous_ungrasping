@@ -8,7 +8,7 @@ import tf
 import moveit_commander
 import helper
 import globals as gbs #global variables 
-gbs.init("slide_test.yaml") #load config as global variables
+gbs.init("whiteboard_magnet.yaml") #load config as global variables
 import motion_primitives
 import yaml
 import actionlib
@@ -46,57 +46,78 @@ if __name__ == '__main__':
         object_thickness = gbs.config['object_thickness']
         object_length = gbs.config['object_length']
         tcp2fingertip = gbs.config['tcp2fingertip']
-        table_height_wrt_world = 0.111-0.02 # with black carton:0.114-0.02 #box on table:0.111-0.02  #table: -0.02
+        table_height_wrt_world = 0.007-0.02 # black carton on aluminium 0.04-0.02 with black carton:0.114-0.02 #box on table:0.111-0.02  #table: -0.02
 
-        print "init pose"
-        #pose = [-0.3, 0.630, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
-        pose = [0.5, -0.8, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
-        motion_primitives.set_pose(pose)
+        # print "init pose"
+        # #pose = [-0.3, 0.630, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
+        # pose = [0.603, -0.8, table_height_wrt_world+tcp2fingertip+object_length-delta_0, 0.7071, 0, -0.7071, 0]
+        # #0.603, -0.797
+        # motion_primitives.set_pose(pose)
 
-        print "init gripper position"
-        Robotiq.goto(robotiq_client, pos=0.10, speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)
+        # print "init gripper position"
+        # Robotiq.goto(robotiq_client, pos=0.10, speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)
 
-        raw_input()
+        # raw_input()
 
-        print "close gripper"
-        Robotiq.goto(robotiq_client, pos=object_thickness+gbs.config['gripper_offset'], speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)   
+        # print "close gripper"
+        # Robotiq.goto(robotiq_client, pos=object_thickness+gbs.config['gripper_offset'], speed=gbs.config['gripper_speed'], force=gbs.config['gripper_force'], block=False)   
 
-        raw_input()
+        # raw_input()
+
+        # print "move up"
+        # motion_primitives.set_pose_relative([0, 0, 0.05])
+        # raw_input()
+        # motion_primitives.set_pose_relative([0, 0.195, 0]) #0.25
+
 
         # read position from real robot. 
         p = group.get_current_pose().pose
         trans_tool0 = [p.position.x, p.position.y, p.position.z]
         rot_tool0 = [p.orientation.x, p.orientation.y, p.orientation.z, p.orientation.w] 
-        T_wg = tf.TransformerROS().fromTranslationRotation(trans_tool0, rot_tool0)
-        P_g_center = [tcp2fingertip+object_length-delta_0, -object_thickness/2, 0, 1] #point G wrt to tcp
-        P_w_center = np.matmul(T_wg, P_g_center) #point G in world frame
-        center = [P_w_center[0], P_w_center[1], P_w_center[2]]
+        print "robot position:"
+        print(trans_tool0)
+        print "robot ori:"
+        print(rot_tool0)
+        # T_wg = tf.TransformerROS().fromTranslationRotation(trans_tool0, rot_tool0)
+        # P_g_center = [tcp2fingertip+object_length-delta_0, -object_thickness/2, 0, 1] #point G wrt to tcp
+        # P_w_center = np.matmul(T_wg, P_g_center) #point G in world frame
+        # center = [P_w_center[0], P_w_center[1], P_w_center[2]]
 
         # Set TCP speed     
-        group.set_max_velocity_scaling_factor(tcp_speed)
+        # group.set_max_velocity_scaling_factor(tcp_speed)
         
-        print "tilt"
-        tilt.tilt(center, axis, int(90-theta_0), tcp_speed)
-        raw_input()
+        # print "tilt"
+        # tilt.tilt(center, axis, int(90-theta_0), tcp_speed)
+
+        # raw_input()
+
+        # print "move down"
+        # motion_primitives.set_pose_relative([0, 0, -0.0445])
+        # raw_input()
 
         # print "regrasp"
-        # width = regrasp.regrasp(np.multiply(axis, -1), int(psi_regrasp), 0.01)
-        # raw_input()
+        # width = regrasp.regrasp(np.multiply(axis, -1), int(psi_regrasp), 0.03)
+        #raw_input()
 
         # print "slide_release"
         # regrasp.slide_release(np.multiply(axis, -1), 0.055, width, 0.005)
         # raw_input()
 
-        print "generalized release"
-        regrasp.generalized_release(np.multiply(axis, -1),30,0.04,0.03)
-        raw_input()
+        # print "generalized release"
+        # regrasp.generalized_release(np.multiply(axis, -1),26,0.041,0.01)
+        # raw_input()
 
-        print "tilt"
-        tilt.tilt(center, axis, int(theta_tilt), tcp_speed)
+        # center = [P_w_center[0], P_w_center[1]+0.0, P_w_center[2]-0.0445] 
 
-        print "tuck"
-        tuck.rotate_tuck(np.multiply(axis, -1), int(tuck_angle), tuck_dist, tcp_speed)
-        print "finished"
+        # raw_input()
+        # print "tilt"
+        # tilt.tilt(center, axis, int(theta_tilt), tcp_speed)
+
+        # print "tuck"
+        # tuck.rotate_tuck(np.multiply(axis, -1), int(tuck_angle), tuck_dist, tcp_speed)
+        # regrasp.second_regrasp(np.multiply(axis, -1),10, 0.01, tcp_speed)
+        #regrasp.regrasp(np.multiply(axis, -1), 15, tcp_speed)
+        # print "finished"
         #rospy.spin()
         
     except rospy.ROSInterruptException: pass

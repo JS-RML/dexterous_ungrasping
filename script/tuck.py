@@ -55,7 +55,7 @@ def rotate_tuck(axis, angle, fingertip2contactB, velocity):
     opening_at_zero = gbs.config['max_opening']-2*gbs.config['finger_thickness']
     gripper_opening = -gbs.config['opening_per_count']*gripper_position + opening_at_zero
 
-    contact_B_e = [gbs.config['tcp2fingertip']-fingertip2contactB, -gripper_opening/2.0, 0, 1]  
+    contact_B_e = [gbs.config['tcp2fingertip']-fingertip2contactB, gripper_opening/2.0, 0, 1]  
     contact_B_w = np.matmul(T_we, contact_B_e) 
 
     tilt.tilt(contact_B_w[:3], axis, angle, velocity)
@@ -172,8 +172,10 @@ def push_tuck2(axis, angle, fingertip2contactB, velocity, tuck):
 
     contact_B_e = [gbs.config['tcp2fingertip']-fingertip2contactB, -gripper_opening/2.0, 0, 1]  
     contact_B_w = np.matmul(T_we, contact_B_e) 
+    #dynamixel.set_length(tuck)
+    tilt.translate_tilt(contact_B_w[:3], axis, angle, velocity, 0.005)
     dynamixel.set_length(tuck)
-    tilt.translate_tilt(contact_B_w[:3], axis, angle, velocity, 0.003)
+    
     
 if __name__ == '__main__':
     try:
