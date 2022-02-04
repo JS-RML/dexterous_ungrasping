@@ -1,3 +1,13 @@
+@ARTICLE{9690013,
+author={Mak, Ka Hei and Kim, Chung Hee and Seo, Jungwon},
+journal={IEEE Robotics and Automation Letters}, 
+title={Robust Ungrasping of High Aspect Ratio Objects Through Dexterous Manipulation}, 
+year={2022},
+volume={7},
+number={2},
+pages={2843-2850},
+doi={10.1109/LRA.2022.3144494}}
+
 @ARTICLE{8598749, 
 author={C. H. {Kim} and J. {Seo}}, 
 journal={IEEE Robotics and Automation Letters}, 
