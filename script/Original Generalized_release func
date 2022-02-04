@@ -1,0 +1,138 @@
+def generalized_release(axis, psi_regrasp, A_slideCoeff, velocity, psi_0=0):
+    '''Generalized release primitive (hybird motion of regrasp and sliding)
+
+    Parameters:
+        axis (list): 3-D vector of rotation axis (right-hand rule) (same as the axis of regrasp)
+        psi_regrasp (double): psi angle of pure regrasp motion when A_slideCoeff = 0
+        A_slideCoeff (double): range [0,1] Coefficient of the slide distance at A (0: pure regrasp, 1:pure sliding)
+        velocity (double): robot velocity between 0 and 1
+        psi_0 (double): psi angle before executing this primitive
+    '''
+    with open(globals.config_path, 'r') as stream:
+        try:
+            config = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+    tcp2fingertip = config['tcp2fingertip']
+    theta_0 = config['theta_0']
+    delta_0 = config['delta_0']
+    obj_thickness = config['object_thickness']
+
+    action_name = rospy.get_param('~action_name', 'command_robotiq_action')
+    robotiq_client = actionlib.SimpleActionClient(action_name, CommandRobotiqGripperAction)
+    
+    #translation
+    A2B_dist = math.sqrt(delta_0**2 + obj_thickness**2)
+    B_slide_dist = A2B_dist * math.radians(psi_regrasp) #arc length formual: equivalent slide distance at B of psi_regrasp
+    A_slide_dist = B_slide_dist * A_slideCoeff / math.cos(math.radians(psi_0)) #distance to slide at A
+    #rotation
+    delta_final = delta_0 - A_slide_dist
+    A2B_dist_final = math.sqrt(delta_final**2 + obj_thickness**2)
+    psi_final = int(A2B_dist/A2B_dist_final * (1-A_slideCoeff) * psi_regrasp) #actual psi angle to rotate with given A_slideCoeff
+    print A_slide_dist, psi_final
+
+    #contact A position in world coordinate
+    pose_target = group.get_current_pose().pose
+    pos_initial = [pose_target.position.x, pose_target.position.y, pose_target.position.z]
+    ori_initial = [pose_target.orientation.x, pose_target.orientation.y, pose_target.orientation.z, pose_target.orientation.w]
+    T_we = tf.TransformListener().fromTranslationRotation(pos_initial, ori_initial) 
+    contact_A_e = [tcp2fingertip, config['object_thickness']/2, 0, 1] #TODO: depends on axis direction 
+    contact_A_w = np.matmul(T_we, contact_A_e) 
+
+    #compute robot path
+    A_slide_hori = A_slide_dist * math.cos(math.radians(theta_0))
+    A_slide_verti = A_slide_dist * math.sin(math.radians(theta_0))
+    if A_slideCoeff < 1:
+        # Interpolate orientation poses via quaternion slerp
+        q = helper.axis_angle2quaternion(axis, psi_final)
+        ori_target = tf.transformations.quaternion_multiply(q, ori_initial)    
+        ori_waypoints = helper.slerp(ori_initial, ori_target, np.arange(1.0/psi_final , 1.0+1.0/psi_final, 1.0/psi_final)) 
+        waypoints = []
+        for psi in range(1, psi_final+1):
+            # Calculate width
+            a = delta_0 * math.cos(math.radians(psi))
+            b = delta_0 * math.sin(math.radians(psi))
+            c = obj_thickness * math.cos(math.radians(psi))
+            d = obj_thickness * math.sin(math.radians(psi))
+            opposite = a - d
+            width = b + c
+
+            # Calculate position of A to tcp
+            if theta_0 + psi <= 90:
+                hori =  math.fabs(tcp2fingertip*math.cos(math.radians(theta_0 + psi))) + math.fabs((width/2.0)*math.sin(math.radians(theta_0+psi)))
+                verti =  math.fabs(tcp2fingertip*math.sin(math.radians(theta_0 + psi))) - math.fabs((width/2.0)*math.cos(math.radians(theta_0+psi)))
+            else:
+                hori = -math.fabs(tcp2fingertip*math.sin(math.radians(theta_0 + psi-90))) + math.fabs((width/2.0)*math.cos(math.radians(theta_0+psi-90)))
+                verti = math.fabs(tcp2fingertip*math.cos(math.radians(theta_0 + psi-90))) + math.fabs((width/2.0)*math.sin(math.radians(theta_0+psi-90)))
+
+            if axis[0] > 0:
+                pose_target.position.y = contact_A_w[1] + hori + A_slide_hori * psi/psi_final
+                pose_target.position.z = contact_A_w[2] + verti + A_slide_verti * psi/psi_final
+                #print "CASE 1"
+            elif axis[0] < 0:
+                pose_target.position.y = contact_A_w[1] - hori - A_slide_hori * psi/psi_final
+                pose_target.position.z = contact_A_w[2] + verti + A_slide_verti * psi/psi_final
+                #print "CASE 2"
+            elif axis[1] > 0:
+                pose_target.position.x = contact_A_w[0] - hori - A_slide_hori * psi/psi_final
+                pose_target.position.z = contact_A_w[2] + verti + A_slide_verti * psi/psi_final
+                #print "CASE 3"
+            elif axis[1] < 0:
+                pose_target.position.x = contact_A_w[0] + hori + A_slide_hori * psi/psi_final
+                pose_target.position.z = contact_A_w[2] + verti + A_slide_verti * psi/psi_final
+                #print "CASE 4"
+
+            pose_target.orientation.x = ori_waypoints[psi-1][0]
+            pose_target.orientation.y = ori_waypoints[psi-1][1]
+            pose_target.orientation.z = ori_waypoints[psi-1][2]
+            pose_target.orientation.w = ori_waypoints[psi-1][3]
+            waypoints.append(copy.deepcopy(pose_target))
+        (plan, fraction) = group.compute_cartesian_path(waypoints, 0.01, 0) 
+        retimed_plan = group.retime_trajectory(robot.get_current_state(), plan, velocity) 
+        group.execute(retimed_plan, wait=False)
+    else: #for the case: A_slideCoeff = 1 and psi_final = 0
+        if axis[0] > 0:
+            motion_primitives.linear_path([0, A_slide_hori, A_slide_verti], velocity, False)
+        elif axis[0] < 0:
+            motion_primitives.linear_path([0, -A_slide_hori, A_slide_verti], velocity, False)
+        elif axis[1] > 0:
+            motion_primitives.linear_path([-A_slide_hori, 0, A_slide_verti], velocity, False)
+        elif axis[1] < 0:
+            motion_primitives.linear_path([A_slide_hori, 0, A_slide_verti], velocity, False)
+
+    #gripper motion
+    if A_slideCoeff < 1:
+        psi = 0
+        while psi < psi_final:
+            pose = group.get_current_pose().pose
+            #get current psi angle
+            q_current = [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w]
+            psi = 2*math.degrees(math.acos(np.dot(q_current, ori_initial))) 
+            if psi > 100:
+                psi = -(psi-360)
+            #get current delta
+            delta_change = math.sqrt((A_slide_hori * psi/psi_final)**2 + (A_slide_verti * psi/psi_final)**2)
+            delta = delta_0 - delta_change
+            a = delta * math.cos(math.radians(psi))
+            b = delta * math.sin(math.radians(psi))
+            c = obj_thickness * math.cos(math.radians(psi))
+            d = obj_thickness * math.sin(math.radians(psi))
+            opposite = a - d
+            width = b + c
+            print psi, delta_change, width #debug
+            Robotiq.goto(robotiq_client, pos=width*1.07+config['gripper_offset'], speed=config['gripper_speed'], force=config['gripper_force'], block=False)
+            psi = round(psi, 2)
+            rospy.sleep(0.5) 
+    else: #for the case: A_slideCoeff = 1 and psi_final = 0
+        slide_current = 0
+        while slide_current < A_slide_dist:
+            pose_current = group.get_current_pose().pose
+            pos_current = np.array((pose_current.position.x, pose_current.position.y, pose_current.position.z))
+            slide_current = np.linalg.norm(pos_current - pos_initial)
+            delta = delta_0 - slide_current #current delta
+            # print delta, slide_current #debug
+            width = delta * math.sin(math.radians(psi_0)) + obj_thickness * math.cos(math.radians(psi_0))
+            Robotiq.goto(robotiq_client, pos=width+config['gripper_offset'], speed=config['gripper_speed'], force=config['gripper_force'], block=False)
+            rospy.sleep(0.5)
+
+    return width
